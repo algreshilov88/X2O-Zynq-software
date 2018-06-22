@@ -29,7 +29,13 @@
 #include "i2c-chip.h"
 #include "toml.h"
 
-#include "Si5332-GM1-RevD-Registers.h"
+#ifdef F250
+#include "Si5332-GM1-RevD-Registers.h" // 250M all channels, for GTH 16G IBERT
+#endif
+
+#ifdef F322
+#include "si5332-322.x-all-Registers.h" // 322.265625M all channels, for 25G GTY IBERT
+#endif
 
 // Make the SDK console work in the debugger
 #define printf(...) \

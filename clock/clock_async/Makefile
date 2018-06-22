@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /root/X2O-Zynq-software/clock/clock_async
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,17 +111,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named clock_async
+# Target rules for targets named clock_async_250M
 
 # Build rule for target.
-clock_async: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 clock_async
-.PHONY : clock_async
+clock_async_250M: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 clock_async_250M
+.PHONY : clock_async_250M
 
 # fast build rule for target.
-clock_async/fast:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/build
-.PHONY : clock_async/fast
+clock_async_250M/fast:
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/build
+.PHONY : clock_async_250M/fast
+
+#=============================================================================
+# Target rules for targets named clock_async_322M
+
+# Build rule for target.
+clock_async_322M: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 clock_async_322M
+.PHONY : clock_async_322M
+
+# fast build rule for target.
+clock_async_322M/fast:
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/build
+.PHONY : clock_async_322M/fast
 
 clock_async.o: clock_async.c.o
 
@@ -129,7 +142,8 @@ clock_async.o: clock_async.c.o
 
 # target to build an object file
 clock_async.c.o:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/clock_async.c.o
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/clock_async.c.o
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/clock_async.c.o
 .PHONY : clock_async.c.o
 
 clock_async.i: clock_async.c.i
@@ -138,7 +152,8 @@ clock_async.i: clock_async.c.i
 
 # target to preprocess a source file
 clock_async.c.i:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/clock_async.c.i
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/clock_async.c.i
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/clock_async.c.i
 .PHONY : clock_async.c.i
 
 clock_async.s: clock_async.c.s
@@ -147,7 +162,8 @@ clock_async.s: clock_async.c.s
 
 # target to generate assembly for a file
 clock_async.c.s:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/clock_async.c.s
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/clock_async.c.s
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/clock_async.c.s
 .PHONY : clock_async.c.s
 
 i2c-chip.o: i2c-chip.c.o
@@ -156,7 +172,8 @@ i2c-chip.o: i2c-chip.c.o
 
 # target to build an object file
 i2c-chip.c.o:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/i2c-chip.c.o
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/i2c-chip.c.o
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/i2c-chip.c.o
 .PHONY : i2c-chip.c.o
 
 i2c-chip.i: i2c-chip.c.i
@@ -165,7 +182,8 @@ i2c-chip.i: i2c-chip.c.i
 
 # target to preprocess a source file
 i2c-chip.c.i:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/i2c-chip.c.i
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/i2c-chip.c.i
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/i2c-chip.c.i
 .PHONY : i2c-chip.c.i
 
 i2c-chip.s: i2c-chip.c.s
@@ -174,7 +192,8 @@ i2c-chip.s: i2c-chip.c.s
 
 # target to generate assembly for a file
 i2c-chip.c.s:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/i2c-chip.c.s
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/i2c-chip.c.s
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/i2c-chip.c.s
 .PHONY : i2c-chip.c.s
 
 semaphore.o: semaphore.c.o
@@ -183,7 +202,8 @@ semaphore.o: semaphore.c.o
 
 # target to build an object file
 semaphore.c.o:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/semaphore.c.o
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/semaphore.c.o
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/semaphore.c.o
 .PHONY : semaphore.c.o
 
 semaphore.i: semaphore.c.i
@@ -192,7 +212,8 @@ semaphore.i: semaphore.c.i
 
 # target to preprocess a source file
 semaphore.c.i:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/semaphore.c.i
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/semaphore.c.i
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/semaphore.c.i
 .PHONY : semaphore.c.i
 
 semaphore.s: semaphore.c.s
@@ -201,7 +222,8 @@ semaphore.s: semaphore.c.s
 
 # target to generate assembly for a file
 semaphore.c.s:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/semaphore.c.s
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/semaphore.c.s
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/semaphore.c.s
 .PHONY : semaphore.c.s
 
 toml.o: toml.c.o
@@ -210,7 +232,8 @@ toml.o: toml.c.o
 
 # target to build an object file
 toml.c.o:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/toml.c.o
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/toml.c.o
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/toml.c.o
 .PHONY : toml.c.o
 
 toml.i: toml.c.i
@@ -219,7 +242,8 @@ toml.i: toml.c.i
 
 # target to preprocess a source file
 toml.c.i:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/toml.c.i
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/toml.c.i
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/toml.c.i
 .PHONY : toml.c.i
 
 toml.s: toml.c.s
@@ -228,7 +252,8 @@ toml.s: toml.c.s
 
 # target to generate assembly for a file
 toml.c.s:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/toml.c.s
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/toml.c.s
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/toml.c.s
 .PHONY : toml.c.s
 
 # Help Target
@@ -237,9 +262,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... clock_async"
 	@echo "... edit_cache"
+	@echo "... rebuild_cache"
+	@echo "... clock_async_250M"
+	@echo "... clock_async_322M"
 	@echo "... clock_async.o"
 	@echo "... clock_async.i"
 	@echo "... clock_async.s"

@@ -60,39 +60,76 @@ CMAKE_SOURCE_DIR = /root/X2O-Zynq-software/clock/clock_async
 CMAKE_BINARY_DIR = /root/X2O-Zynq-software/clock/clock_async
 
 #=============================================================================
-# Target rules for target CMakeFiles/clock_async.dir
+# Target rules for target CMakeFiles/clock_async_250M.dir
 
 # All Build rule for target.
-CMakeFiles/clock_async.dir/all:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/depend
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/X2O-Zynq-software/clock/clock_async/CMakeFiles --progress-num=1,2,3,4,5 "Built target clock_async"
-.PHONY : CMakeFiles/clock_async.dir/all
+CMakeFiles/clock_async_250M.dir/all:
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/depend
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/X2O-Zynq-software/clock/clock_async/CMakeFiles --progress-num=1,2,3,4,5 "Built target clock_async_250M"
+.PHONY : CMakeFiles/clock_async_250M.dir/all
 
 # Include target in all.
-all: CMakeFiles/clock_async.dir/all
+all: CMakeFiles/clock_async_250M.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/clock_async.dir/rule: cmake_check_build_system
+CMakeFiles/clock_async_250M.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /root/X2O-Zynq-software/clock/clock_async/CMakeFiles 5
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/clock_async.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/clock_async_250M.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /root/X2O-Zynq-software/clock/clock_async/CMakeFiles 0
-.PHONY : CMakeFiles/clock_async.dir/rule
+.PHONY : CMakeFiles/clock_async_250M.dir/rule
 
 # Convenience name for target.
-clock_async: CMakeFiles/clock_async.dir/rule
+clock_async_250M: CMakeFiles/clock_async_250M.dir/rule
 
-.PHONY : clock_async
-
-# clean rule for target.
-CMakeFiles/clock_async.dir/clean:
-	$(MAKE) -f CMakeFiles/clock_async.dir/build.make CMakeFiles/clock_async.dir/clean
-.PHONY : CMakeFiles/clock_async.dir/clean
+.PHONY : clock_async_250M
 
 # clean rule for target.
-clean: CMakeFiles/clock_async.dir/clean
+CMakeFiles/clock_async_250M.dir/clean:
+	$(MAKE) -f CMakeFiles/clock_async_250M.dir/build.make CMakeFiles/clock_async_250M.dir/clean
+.PHONY : CMakeFiles/clock_async_250M.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/clock_async_250M.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/clock_async_322M.dir
+
+# All Build rule for target.
+CMakeFiles/clock_async_322M.dir/all:
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/depend
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/X2O-Zynq-software/clock/clock_async/CMakeFiles --progress-num=6,7,8,9,10 "Built target clock_async_322M"
+.PHONY : CMakeFiles/clock_async_322M.dir/all
+
+# Include target in all.
+all: CMakeFiles/clock_async_322M.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/clock_async_322M.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /root/X2O-Zynq-software/clock/clock_async/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/clock_async_322M.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /root/X2O-Zynq-software/clock/clock_async/CMakeFiles 0
+.PHONY : CMakeFiles/clock_async_322M.dir/rule
+
+# Convenience name for target.
+clock_async_322M: CMakeFiles/clock_async_322M.dir/rule
+
+.PHONY : clock_async_322M
+
+# clean rule for target.
+CMakeFiles/clock_async_322M.dir/clean:
+	$(MAKE) -f CMakeFiles/clock_async_322M.dir/build.make CMakeFiles/clock_async_322M.dir/clean
+.PHONY : CMakeFiles/clock_async_322M.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/clock_async_322M.dir/clean
 
 .PHONY : clean
 
