@@ -8,10 +8,10 @@ bnum=(0          8             10         11         12            13           
 mask=(0xff       3              1          1          1             1             1             1             1           0xf       )
 
 # control
-name+=(en_ipmb_zynq id         qvb_on_off prbs_sel    aurora_pma_init tx_polarity gtp_reset  channel_up c2c_slave_reset)
-addr+=(0x41220000   0x41220000 0x41220000 0x41220000  0x41220000      0x41220000  0x41220000 0x41220000 0x41220000     )
-bnum+=(0            2          5          6           9               10          14         15         16             ) 
-mask+=(3            7          1          7           1               0xf         1          1          1              )
+name+=(en_ipmb_zynq id         qvb_on_off prbs_sel    aurora_pma_init tx_polarity gtp_reset  channel_up_top c2c_slave_reset_top channel_up_bot c2c_slave_reset_bot)
+addr+=(0x41220000   0x41220000 0x41220000 0x41220000  0x41220000      0x41220000  0x41220000 0x41220000     0x41220000          0x41220000     0x41220000         )
+bnum+=(0            2          5          6           9               10          14         15             16                  17             18                 ) 
+mask+=(3            7          1          7           1               0xf         1          1              1                   1              1                  )
 
 #syntax: devreg reg_name [wr_value]
 

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
+#include <random>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -94,6 +95,9 @@ int main (int argc, char* argv[])
         exit (1);
     }
 
+	std::default_random_engine generator;
+	std::uniform_int_distribution<uint64_t> distribution(0, 0xffffffffffffffffULL);
+
     uint64_t j = 0xff00000000000000ULL;
     while (true)
     {
@@ -101,7 +105,8 @@ int main (int argc, char* argv[])
         for (uint64_t i = 0; i < DRP_SIZE/8; i++)
         {
             //      printf ("i: %04llx\n", i); fflush (stdout);
-            pw[i] = (j << 10) + i;
+//            pw[i] = (j << 10) + i;
+            pw[i] = distribution(generator);
         }
 
         memset (pr, 0, DRP_SIZE);
