@@ -1,0 +1,1 @@
+/usr/bin/gcc -lrt -g  -rdynamic CMakeFiles/clock_async.dir/clock_async.c.o CMakeFiles/clock_async.dir/toml.c.o CMakeFiles/clock_async.dir/i2c-chip.c.o CMakeFiles/clock_async.dir/semaphore.c.o  -o clock_async 
