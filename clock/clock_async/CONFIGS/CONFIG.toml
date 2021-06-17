@@ -1,0 +1,7 @@
+# CONFIG for si5332 
+
+[I2C_BUS]
+i2c_bus = 0
+
+[I2C_CHIPS]
+i2c_chip = [0x6a]

@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 2.8)
+
+	project(clock_sync)
+	set(CMAKE_C_COMPILER /usr/bin/gcc)
+	set(CMAKE_BUILD_TYPE Debug)
+	set(CMAKE_C_FLAGS "-lrt")
+	set(CMAKE_CXX_FLAGS "-lrt")
+	set(SRCS "clock_sync.c" "toml.c" "i2c-chip.c" "semaphore.c")
+	set(HDRS "Si5345-160p3144_40p08_in_apexsync-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
+	add_executable(${PROJECT_NAME} ${SRCS} ${HDRS})

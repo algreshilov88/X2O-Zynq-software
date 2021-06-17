@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 2.8)
+
+	project(clock_async)
+	set(CMAKE_C_COMPILER /usr/bin/gcc)
+	set(CMAKE_BUILD_TYPE Debug)
+	set(CMAKE_C_FLAGS "-lrt")
+	set(CMAKE_CXX_FLAGS "-lrt")
+	set(SRCS "clock_async.c" "toml.c" "i2c-chip.c" "semaphore.c")
+	set(HDRS "Si5332-GM1-RevD-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
+	add_executable(${PROJECT_NAME} ${SRCS} ${HDRS})
