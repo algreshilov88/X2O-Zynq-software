@@ -1,10 +1,10 @@
-# License
+## License
 "xvcServer.c", is a derivative of "xvcd.c" (https://github.com/tmbinc/xvcd) 
 by tmbinc, used under CC0 1.0 Universal (http://creativecommons.org/publicdomain/zero/1.0/). 
 "xvcServer.c" is licensed under CC0 1.0 Universal (http://creativecommons.org/publicdomain/zero/1.0/) 
 by Avnet and is used by Xilinx for XAPP1251.
 
-# Overview
+## Overview
 There are two modes to compile xvcServer.c: ioctl and mmap.  The difference between the two modes is in the method used to communicate between the xvcServer program and the IP in the FPGA fabric.
 
 The default mode is ioctl which uses the ioctl() system call to utilize the xilinx_xvc_driver Linux kernel driver to access IP memory.  See `src/driver` for this driver's source code and steps to compile.
@@ -18,7 +18,7 @@ Running the default
 `make`
 or
 `make ioctl`
-will compile xvcServer.c in ioctl mode.  This uses the USE_IOCTL compilation flag to cross-compile the relevant ioctl xvcServer.c source code.  The program will be named xvcServer_ioctl.
+will compile xvcServer.c in ioctl mode.  This uses the USE_IOCTL compilation flag to compile the relevant ioctl xvcServer.c source code.  The program will be named xvcServer_ioctl.
 
 Running
 `make mmap`

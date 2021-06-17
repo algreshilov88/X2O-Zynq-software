@@ -1,10 +1,10 @@
-# License
+## License
 "xvcServer_uio.c", is a derivative of "xvcd.c" (https://github.com/tmbinc/xvcd) 
 by tmbinc, used under CC0 1.0 Universal (http://creativecommons.org/publicdomain/zero/1.0/). 
 "xvcServer.c" is licensed under CC0 1.0 Universal (http://creativecommons.org/publicdomain/zero/1.0/) 
 by Avnet and is used by Xilinx for XAPP1251.
 
-# Overview
+## Overview
 This tool uses the mmap() system call to map IP memory into Linux user space through the built-in Linux generic_uio driver.
 
 # Before compilation
@@ -13,4 +13,4 @@ Make sure debug_bridge node is compatible to generic-uio. This can be done from 
 
 ## How to Compile
 Running from XAPP1251 folder
-`cmake .` than `make`
+`cmake .` then `make`
