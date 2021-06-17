@@ -1,12 +1,12 @@
 ## Configuration
-To configure i2c bus number and i2c chips set that should be using please 
+To set required i2c bus number and i2c chips please 
 correct corresponding '[I2C_BUS]' and '[I2C_CHIPS]' tables in CONFIG.toml file or create new 'custom_config.toml' file.
 
 
 ## Compilation
-In case of new source files added please follow the next steps
+In case of new source files added or first time of compilation please follow the next steps
 
-* (Correct source files set in CMakeLists.txt file)
+* Correct source files set in CMakeLists.txt file
 * cmake .
 * make
 

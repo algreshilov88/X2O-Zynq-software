@@ -8,7 +8,8 @@ by Avnet and is used by Xilinx for XAPP1251.
 This tool uses the mmap() system call to map IP memory into Linux user space through the built-in Linux generic_uio driver.
 
 ## Before compilation
-Make sure generic_uio driver set in Kernel during Petalinux compilation flow
+Make sure generic_uio driver set in Kernel during Petalinux compilation flow.
+
 Make sure debug_bridge node is compatible to generic-uio. This can be done from `project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi` in Petalinux flow. 
 
 ## How to Compile
