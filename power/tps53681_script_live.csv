@@ -1,0 +1,96 @@
+Comment,Format=CSV; Hex=CoderUpper; BreakOutBytes=False; PEC=True; SMBusWordCommandBytesOrderAsLowByteFirst=True; IncludeBlockLength=True [DO NOT REMOVE THIS LINE IF YOU WANT TO IMPORT USING A FUSION TOOL]
+Comment,"PEC byte is calculated on all message bytes, including addresses and Read/Write bit."
+Comment,"SMBus Fields are Request,Address,Command,Data with PEC byte"
+Comment,SMBus Word Command data bytes order is: <low-byte><high-byte>
+Comment,"For reads, the last field is what is expected back from the device"
+Comment,Creator: Texas Instruments Fusion Digital Power Designer v7.6.1
+Comment,"Date: Friday, April 2, 2021"
+Comment,Write ON_OFF_CONFIG Mode: OPERATION only to turn rail 1 off
+WriteByte,0x68,0x00,0x002F
+WriteByte,0x68,0x02,0x0005
+Comment,Write OPERATION Unit: ImmediateOff; Margin: None to turn rail 1 off
+WriteByte,0x68,0x01,0x003A
+Comment,Write ON_OFF_CONFIG Mode: OPERATION only to turn rail 2 off
+WriteByte,0x68,0x00,0x0128
+WriteByte,0x68,0x02,0x0005
+Comment,Write OPERATION Unit: ImmediateOff; Margin: None to turn rail 2 off
+WriteByte,0x68,0x01,0x003A
+Comment,Write configuration to volatile memory
+Comment,Write VOUT_MAX [Rail #1] 1.250 V
+WriteByte,0x68,0x00,0x002F
+ReadByte,0x68,0x00,0x00
+WriteWord,0x68,0x24,0xC90075
+ReadWord,0x68,0x24,0xC900
+Comment,Write USER_DATA_00 [Rail #1] 1100020020F2
+BlockWrite,0x68,0xB0,0x061100020020F264
+BlockRead,0x68,0xB0,0x061100020020F2
+Comment,Write USER_DATA_01 [Rail #1] 000000000040
+BlockWrite,0x68,0xB1,0x0600000000004055
+BlockRead,0x68,0xB1,0x06000000000040
+Comment,Write USER_DATA_02 [Rail #1] 8D0400000050
+BlockWrite,0x68,0xB2,0x068D0400000050B1
+BlockRead,0x68,0xB2,0x068D0400000050
+Comment,Write USER_DATA_03 [Rail #1] 040011030080
+BlockWrite,0x68,0xB3,0x0604001103008055
+BlockRead,0x68,0xB3,0x06040011030080
+Comment,Write USER_DATA_04 [Rail #1] 8686C545C777
+BlockWrite,0x68,0xB4,0x068686C545C7776D
+BlockRead,0x68,0xB4,0x068686C545C777
+Comment,Write USER_DATA_05 [Rail #1] FF88D6BF83FF
+BlockWrite,0x68,0xB5,0x06FF88D6BF83FF91
+BlockRead,0x68,0xB5,0x06FF88D6BF83FF
+Comment,Write USER_DATA_06 [Rail #1] E5DA1110E87F
+BlockWrite,0x68,0xB6,0x06E5DA1110E87F35
+BlockRead,0x68,0xB6,0x06E5DA1110E87F
+Comment,Write USER_DATA_07 [Rail #1] 80FF000012FF
+BlockWrite,0x68,0xB7,0x0680FF000012FFA3
+BlockRead,0x68,0xB7,0x0680FF000012FF
+Comment,Write USER_DATA_08 [Rail #1] 0002000000EF
+BlockWrite,0x68,0xB8,0x060002000000EF5E
+BlockRead,0x68,0xB8,0x060002000000EF
+Comment,Write USER_DATA_09 [Rail #1] 000130048080
+BlockWrite,0x68,0xB9,0x0600013004808055
+BlockRead,0x68,0xB9,0x06000130048080
+Comment,Write USER_DATA_10 [Rail #1] 00662E40008D
+BlockWrite,0x68,0xBA,0x0600662E40008DFE
+BlockRead,0x68,0xBA,0x0600662E40008D
+Comment,Write USER_DATA_11 [Rail #1] 086120C08FE1
+BlockWrite,0x68,0xBB,0x06086120C08FE132
+BlockRead,0x68,0xBB,0x06086120C08FE1
+Comment,Write USER_DATA_12 [Rail #1] 40D08D20FF01
+BlockWrite,0x68,0xBC,0x0640D08D20FF0112
+BlockRead,0x68,0xBC,0x0640D08D20FF01
+Comment,Write VOUT_COMMAND [Rail #1] 1.200 V
+WriteWord,0x68,0x21,0xBF0069
+ReadWord,0x68,0x21,0xBF00
+Comment,Write VOUT_MARGIN_HIGH [Rail #1] 0.000 V
+WriteWord,0x68,0x25,0x00004E
+ReadWord,0x68,0x25,0x0000
+Comment,Write VOUT_MARGIN_LOW [Rail #1] 0.000 V
+WriteWord,0x68,0x26,0x0000F3
+ReadWord,0x68,0x26,0x0000
+Comment,Write VOUT_MIN [Rail #1] 0.000 V
+WriteWord,0x68,0x2B,0x000062
+ReadWord,0x68,0x2B,0x0000
+Comment,Write VOUT_MAX [Rail #2] 0.950 V
+WriteByte,0x68,0x00,0x0128
+ReadByte,0x68,0x00,0x01
+WriteWord,0x68,0x24,0x8D007A
+ReadWord,0x68,0x24,0x8D00
+Comment,Write VOUT_COMMAND [Rail #2] 0.900 V
+WriteWord,0x68,0x21,0x83006C
+ReadWord,0x68,0x21,0x8300
+Comment,Write VOUT_MARGIN_HIGH [Rail #2] 0.000 V
+WriteWord,0x68,0x25,0x00004E
+ReadWord,0x68,0x25,0x0000
+Comment,Write VOUT_MARGIN_LOW [Rail #2] 0.000 V
+WriteWord,0x68,0x26,0x0000F3
+ReadWord,0x68,0x26,0x0000
+Comment,Write VOUT_MIN [Rail #2] 0.000 V
+WriteWord,0x68,0x2B,0x000062
+ReadWord,0x68,0x2B,0x0000
+Comment,Store configuration to non-volatile memory
+Comment,Execute STORE_DEFAULT_ALL
+SendByte,0x68,0x11
+Pause,1000,"Pausing 1,000.00 ms for STORE_DEFAULT_ALL hold time"
+Comment,Script end
