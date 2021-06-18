@@ -1,0 +1,3 @@
+/root/X2O-Zynq-software/dbg_bridge/CMakeFiles/rebuild_cache.dir
+/root/X2O-Zynq-software/dbg_bridge/CMakeFiles/xvcserver_uio.dir
+/root/X2O-Zynq-software/dbg_bridge/CMakeFiles/edit_cache.dir

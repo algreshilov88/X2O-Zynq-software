@@ -1,0 +1,1 @@
+/usr/bin/gcc -g  -rdynamic CMakeFiles/xvcserver_uio.dir/xvcserver_uio.c.o  -o xvcserver_uio 
