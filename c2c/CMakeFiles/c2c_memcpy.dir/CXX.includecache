@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/root/X2O-Zynq-software/c2c/c2c_memcpy.cpp
+iostream
+-
+fcntl.h
+-
+iostream
+-
+sstream
+-
+string
+-
+fstream
+-
+map
+-
+vector
+-
+sys/types.h
+-
+sys/stat.h
+-
+fcntl.h
+-
+stdint.h
+-
+sys/mman.h
+-
+string.h
+-
+stdlib.h
+-
+signal.h
+-
+setjmp.h
+-
+

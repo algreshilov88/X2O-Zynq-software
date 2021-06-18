@@ -1,0 +1,1 @@
+/usr/bin/c++  -lrt -g  -rdynamic CMakeFiles/c2c_ptr.dir/c2c_ptr.cpp.o  -o c2c_ptr 
