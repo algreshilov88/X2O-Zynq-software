@@ -9,27 +9,27 @@
  * Part:		                                       Si5332-GM1 Rev D
  * Design ID:                                          
  * Includes Pre/Post Download Control Register Writes: Yes
- * Created By:                                         ClockBuilder Pro v2.45 [2020-07-16]
- * Timestamp:                                          2020-07-24 14:56:24 GMT-04:00
+ * Created By:                                         ClockBuilder Pro v3.4 [2021-06-02]
+ * Timestamp:                                          2021-06-18 13:44:33 GMT-04:00
  *
  * A complete design report corresponding to this export is included at the end 
  * of this header file.
  *
  */
 
-#ifndef SI5332-GM1_REVD_REG_CONFIG_HEADER
-#define SI5332-GM1_REVD_REG_CONFIG_HEADER
+#ifndef SI5332_GM1_REVD_REG_CONFIG_HEADER
+#define SI5332_GM1_REVD_REG_CONFIG_HEADER
 
-#define SI5332-GM1_REVD_REG_CONFIG_NUM_REGS				62
+#define SI5332_GM1_REVD_REG_CONFIG_NUM_REGS				62
 
 typedef struct
 {
 	unsigned int address; /* 8-bit register address */
 	unsigned char value; /* 8-bit register data */
 
-} si5332-gm1_revd_register_t;
+} si5332_gm1_revd_register_t;
 
-si5332-gm1_revd_register_t const si5332-gm1_revd_registers[SI5332-GM1_REVD_REG_CONFIG_NUM_REGS] =
+si5332_gm1_revd_register_t const si5332_gm1_revd_registers[SI5332_GM1_REVD_REG_CONFIG_NUM_REGS] =
 {
 
 	/* Start configuration preamble */
@@ -115,8 +115,8 @@ si5332-gm1_revd_register_t const si5332-gm1_revd_registers[SI5332-GM1_REVD_REG_C
  * Part:               Si5332EGL Rev D
  * Project File:       F:\madorsky\cernbox\projects\silabs\apex\si5332-322.x-all.slabtimeproj
  * Design ID:          <none>
- * Created By:         ClockBuilder Pro v2.45 [2020-07-16]
- * Timestamp:          2020-07-24 14:56:23 GMT-04:00
+ * Created By:         ClockBuilder Pro v3.4 [2021-06-02]
+ * Timestamp:          2021-06-18 13:44:33 GMT-04:00
  * 
  * Design Rule Check
  * =================
@@ -153,11 +153,11 @@ si5332-gm1_revd_register_t const si5332-gm1_revd_registers[SI5332-GM1_REVD_REG_C
  * Base I2C Address: 0x6A
  * 
  * Universal Hardware Input Pins:
- *    INPUT1 (P8) : None
- *    INPUT2 (P17): None
- *    INPUT3 (P24): None
- *    INPUT4 (P28): None
- *    INPUT5 (P29): None
+ *    INPUT1 (P8) : None                          
+ *    INPUT2 (P17): None                          
+ *    INPUT3 (P24): None                          
+ *    INPUT4 (P28): None                          
+ *    INPUT5 (P29): None                          
  * 
  * Inputs:
  *    XAXB: 50 MHz
@@ -165,12 +165,18 @@ si5332-gm1_revd_register_t const si5332-gm1_revd_registers[SI5332-GM1_REVD_REG_C
  *  CLKIN2: Unused
  * 
  * Outputs:
- *    OUT0: 322.265625 MHz LVDS Fast 1.8 V, Disabled: Stop Low
- *    OUT1: 322.265625 MHz LVDS Fast 1.8 V, Disabled: Stop Low
- *    OUT2: 322.265625 MHz LVDS Fast 1.8 V, Disabled: Stop Low
- *    OUT3: 322.265625 MHz LVDS Fast 1.8 V, Disabled: Stop Low
- *    OUT4: 322.265625 MHz LVDS Fast 1.8 V, Disabled: Stop Low
- *    OUT5: 322.265625 MHz LVDS Fast 1.8 V, Disabled: Stop Low
+ *    OUT0: 322.265625 MHz LVDS Fast 1.8 V, Disabled-State: Stop Low
+ *          Power-up state: Enabled
+ *    OUT1: 322.265625 MHz LVDS Fast 1.8 V, Disabled-State: Stop Low
+ *          Power-up state: Enabled
+ *    OUT2: 322.265625 MHz LVDS Fast 1.8 V, Disabled-State: Stop Low
+ *          Power-up state: Enabled
+ *    OUT3: 322.265625 MHz LVDS Fast 1.8 V, Disabled-State: Stop Low
+ *          Power-up state: Enabled
+ *    OUT4: 322.265625 MHz LVDS Fast 1.8 V, Disabled-State: Stop Low
+ *          Power-up state: Enabled
+ *    OUT5: 322.265625 MHz LVDS Fast 1.8 V, Disabled-State: Stop Low
+ *          Power-up state: Enabled
  * 
  * Frequency Plan
  * ==============
