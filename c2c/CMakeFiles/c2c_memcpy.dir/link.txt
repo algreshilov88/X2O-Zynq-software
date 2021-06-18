@@ -1,1 +1,0 @@
-/usr/bin/c++  -lrt -g  -rdynamic CMakeFiles/c2c_memcpy.dir/c2c_memcpy.cpp.o  -o c2c_memcpy 

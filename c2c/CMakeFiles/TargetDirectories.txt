@@ -1,4 +1,0 @@
-/root/X2O-Zynq-software/c2c/CMakeFiles/rebuild_cache.dir
-/root/X2O-Zynq-software/c2c/CMakeFiles/edit_cache.dir
-/root/X2O-Zynq-software/c2c/CMakeFiles/c2c_memcpy.dir
-/root/X2O-Zynq-software/c2c/CMakeFiles/c2c_ptr.dir

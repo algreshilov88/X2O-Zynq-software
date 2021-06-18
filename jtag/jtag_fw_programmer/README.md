@@ -4,8 +4,6 @@
 ## Compilation
 To compile jtag_fw_programmer on Zynq run ‘cmake .’ then 'make'
 
-Copy compiled binary to Zynq board along with bitstream file for uploading to FPGA
-
 Make sure that "xilinx_xvc_driver.ko" is loaded
 
 Make sure xvcServer is not running

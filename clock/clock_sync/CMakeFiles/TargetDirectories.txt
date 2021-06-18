@@ -1,3 +1,0 @@
-/root/X2O-Zynq-software/clock/clock_sync/CMakeFiles/rebuild_cache.dir
-/root/X2O-Zynq-software/clock/clock_sync/CMakeFiles/clock_sync.dir
-/root/X2O-Zynq-software/clock/clock_sync/CMakeFiles/edit_cache.dir
