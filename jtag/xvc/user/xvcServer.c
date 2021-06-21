@@ -21,6 +21,8 @@
 #include <netinet/in.h>
 #include <pthread.h>
 
+#include "semaphore.h"
+
 #ifndef USE_IOCTL
 #define MAP_SIZE    0x10000
 #define UIO_PATH    "/dev/uio0"
@@ -58,7 +60,7 @@ static int sread(int fd, void *target, int len) {
 #ifndef USE_IOCTL
 int handle_data(int fd, volatile jtag_t* ptr) {
 #else /* USE_IOCTL */
-int handle_data(int fd, int fd_ioctl) {
+int handle_data(int fd, int fd_ioctl, int ind) {
 #endif /* !USE_IOCTL */
     char xvcInfo[32];
     unsigned int bufferSize = 2048;
@@ -66,6 +68,9 @@ int handle_data(int fd, int fd_ioctl) {
     sprintf(xvcInfo, "xvcServer_v1.0:%u\n", bufferSize);
 
     do {
+	unlock_device(ind);
+	lock_device(ind);
+
         char cmd[16];
         unsigned char buffer[bufferSize], result[bufferSize / 2];
         memset(cmd, 0, 16);
@@ -198,6 +203,8 @@ int handle_data(int fd, int fd_ioctl) {
             perror("write");
             return 1;
         }
+	unlock_device(ind);
+	lock_device(ind);
     } while (1);
 
     /* Note: Need to fix JTAG state updates, until then no exit is allowed */
@@ -266,7 +273,10 @@ int main(int argc, char **argv) {
     close(fd_uio);
 #else /* USE_IOCTL */
     int fd_ioctl;
+    int ind = (int) strtol(&char_dev[strlen(char_dev)-1], NULL, 10);
 
+    create_semaphore(ind);
+ 
     fd_ioctl = open(char_dev, O_RDWR | O_SYNC);
     if (fd_ioctl < 1) {
         fprintf(stderr, "Failed to open xvc ioctl device driver: %s\n", char_dev);
@@ -322,10 +332,14 @@ int main(int argc, char **argv) {
         fd_set read = conn, except = conn;
         int fd;
 
+	unlock_device(ind);
+
         if (select(maxfd + 1, &read, 0, &except, 0) < 0) {
             perror("select");
             break;
         }
+
+	lock_device(ind);
 
         for (fd = 0; fd <= maxfd; ++fd) {
             if (FD_ISSET(fd, &read)) {
@@ -352,7 +366,7 @@ int main(int argc, char **argv) {
 #ifndef USE_IOCTL
                 } else if (handle_data(fd, ptr)) {
 #else /* USE_IOCTL */
-                } else if (handle_data(fd, fd_ioctl)) {
+                } else if (handle_data(fd, fd_ioctl, ind)) {
 #endif /* !USE_IOCTL */
                     printf("connection closed - fd %d\n", fd);
                     close(fd);
@@ -366,6 +380,9 @@ int main(int argc, char **argv) {
                     break;
             }
         }
+
+	unlock_device(ind);
+	lock_device(ind);
     }
 
 #ifndef USE_IOCTL
