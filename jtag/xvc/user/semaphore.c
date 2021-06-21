@@ -40,10 +40,6 @@ int lock_device(int dev_ind)
 		perror("lock semop()");
 		return -1;
 	}
-	else
-	{
-		printf("LOCK SUCCESS %d #####################################################\n", dev_ind);
-	}
 
 	return 0;
 }
@@ -63,10 +59,6 @@ int unlock_device(int dev_ind)
 	{
 		perror("unlock semop()");
 		return -1;
-	}
-	else
-	{
-		printf("UNLOCK SUCCESS %d +++++++++++++++++++++++++++++++++++++++++++++++++++\n", dev_ind);
 	}
 	
 	/*if ((semctl(sem_id, 0, IPC_RMID)) == -1)
