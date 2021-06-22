@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <errno.h>
 #include <string.h>
 #include <time.h>
@@ -42,6 +43,7 @@ static char* char_dev = CHAR_DEV_PATH;
 #endif /* !USE_IOCTL */
 
 static int verbose = 0;
+int ind = 0;
 
 #define XVC_PORT 2542
 
@@ -227,7 +229,39 @@ void display_driver_properties(int fd_ioctl) {
     printf("INFO: debug_bridge size: 0x%lX\n", props.debug_bridge_size);
     printf("INFO: debug_bridge device tree compatibility string: %s\n\n", props.debug_bridge_compat_string);
 }
-#endif /* USE_IOCTL */
+
+void sig_handler(int signo)
+{
+    	if (signo == SIGUSR1) {
+        	reset_semaphore(ind);
+		exit(EXIT_SUCCESS);
+	} else if (signo == SIGABRT) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGQUIT) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGTERM) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGILL) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGFPE) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGINT) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGSEGV) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGHUP) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	}
+}
+#endif /* USE_IOCTL */ 
 
 int main(int argc, char **argv) {
     int i;
@@ -273,10 +307,20 @@ int main(int argc, char **argv) {
     close(fd_uio);
 #else /* USE_IOCTL */
     int fd_ioctl;
-    int ind = (int) strtol(&char_dev[strlen(char_dev)-1], NULL, 10);
+    ind = (int) strtol(&char_dev[strlen(char_dev)-1], NULL, 10);
 
     create_semaphore(ind);
- 
+
+    signal(SIGUSR1, sig_handler);
+    signal(SIGQUIT, sig_handler);
+    signal(SIGTERM, sig_handler);
+    signal(SIGABRT, sig_handler);
+    signal(SIGFPE, sig_handler);
+    signal(SIGILL, sig_handler);
+    signal(SIGSEGV, sig_handler);
+    signal(SIGHUP, sig_handler);
+    signal(SIGINT, sig_handler);
+
     fd_ioctl = open(char_dev, O_RDWR | O_SYNC);
     if (fd_ioctl < 1) {
         fprintf(stderr, "Failed to open xvc ioctl device driver: %s\n", char_dev);
@@ -327,6 +371,8 @@ int main(int argc, char **argv) {
     FD_SET(s, &conn);
 
     maxfd = s;
+
+    lock_device(ind);
 
     while (1) {
         fd_set read = conn, except = conn;
