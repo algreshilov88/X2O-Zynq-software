@@ -16,3 +16,12 @@ cmake_minimum_required(VERSION 2.8)
 	set(HDRS_322M "si5332-322.x-all-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
 	add_executable(clock_async_322M ${SRCS} ${HDRS_322M})
 	set_target_properties(clock_async_322M PROPERTIES COMPILE_FLAGS "-DF322")
+
+	set(HDRS_156M "si5332-gty-156p25-gth-156p25-c2c-250-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
+	add_executable(clock_async_156M ${SRCS} ${HDRS_156M})
+	set_target_properties(clock_async_156M PROPERTIES COMPILE_FLAGS "-DF156p25")
+
+	set(HDRS_Y156_H250 "si5332-gty-156p25-gth-250-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
+	add_executable(clock_async_Y156_H250 ${SRCS} ${HDRS_156M})
+	set_target_properties(clock_async_Y156_H250 PROPERTIES COMPILE_FLAGS "-DY156p25_H250")
+

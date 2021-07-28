@@ -49,6 +49,11 @@ int main (int argc, char* argv[])
 	}
 
     string target = argv[1];
+    if (target.compare("top_bram_gem") == 0) // test BRAM @0 in KU15P, GEM design
+    {
+        DRP_BASE = 0x54020000;
+        DRP_SIZE = 0x10000; // 64KB
+    }
     if (target.compare("top_bram0") == 0) // test BRAM @0 in KU15P
     {
         DRP_BASE = 0x50000000;

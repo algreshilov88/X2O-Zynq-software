@@ -29,7 +29,17 @@
 #include "toml.h"
 
 //#include "Si5345-160p3144-apexsync-Registers.h"
+#ifdef F160p3144_LHC
 #include "Si5345-160p3144_40p08_in_apexsync-Registers.h"
+#endif
+
+#ifdef F160p3156
+#include "Si5345-160p3156_no_ref_apexsync-Registers.h"
+#endif
+
+#ifdef F320p6288_LHC
+#include "Si5345-320p6288_40p08_in_apexsync-Registers.h"
+#endif
 
 // Make the SDK console work in the debugger
 #define printf(...) \
