@@ -41,6 +41,10 @@
 #include "Si5345-320p6288_40p08_in_apexsync-Registers.h"
 #endif
 
+#ifdef F320p632_WIB
+#include "Si5345-320p632_no_ref_apexsync-Registers.h"
+#endif
+
 // Make the SDK console work in the debugger
 #define printf(...) \
  fprintf(stdout, __VA_ARGS__); \

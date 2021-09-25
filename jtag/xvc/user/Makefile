@@ -19,14 +19,14 @@ test: $(TEST)
 .PHONY: all
 all: ioctl mmap test
 
-$(XVCSERVER)_ioctl: $(XVCSERVER).c semaphore.c
-	$(MYCC) -Wall -I$(IOCTL_HDR_DIR) -DUSE_IOCTL -g -o $@ $^
+$(XVCSERVER)_ioctl: $(XVCSERVER).c
+	$(MYCC) -Wall -I$(IOCTL_HDR_DIR) -DUSE_IOCTL -o $@ $^
 
 $(XVCSERVER)_mmap: $(XVCSERVER).c
-	$(MYCC) -Wall -g -o $@ $^
+	$(MYCC) -Wall -o $@ $^
 
 $(TEST): $(TEST).c
-	$(MYCC) -I$(IOCTL_HDR_DIR) -g -o $@ $^
+	$(MYCC) -I$(IOCTL_HDR_DIR) -o $@ $^
 
 .PHONY: clean
 clean:

@@ -9,6 +9,4 @@ cmake_minimum_required(VERSION 2.8)
 	add_executable(c2c_memcpy ${SRCS_MEMCPY})
 	set(SRCS_PTR "c2c_ptr.cpp")
 	add_executable(c2c_ptr ${SRCS_PTR})
-	set(SRCS_STAB "c2c_stab.cpp")
-	add_executable(c2c_stab ${SRCS_STAB})
 

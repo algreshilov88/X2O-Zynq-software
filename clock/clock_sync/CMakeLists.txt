@@ -13,10 +13,14 @@ cmake_minimum_required(VERSION 2.8)
 	set_target_properties(clock_sync_160M_LHC PROPERTIES COMPILE_FLAGS "-DF160p3144_LHC")
 
 	set(HDRS_160_NOREF "Si5345-160p3156_no_ref_apexsync-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
-	add_executable(clock_sync_160M_noref ${SRCS} ${HDRS_160_LHC})
+	add_executable(clock_sync_160M_noref ${SRCS} ${HDRS_160_NOREF})
 	set_target_properties(clock_sync_160M_noref PROPERTIES COMPILE_FLAGS "-DF160p3156")
 
 	set(HDRS_320_LHC "Si5345-320p6288_40p08_in_apexsync-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
-	add_executable(clock_sync_320M_LHC ${SRCS} ${HDRS_160_LHC})
+	add_executable(clock_sync_320M_LHC ${SRCS} ${HDRS_320_LHC})
 	set_target_properties(clock_sync_320M_LHC PROPERTIES COMPILE_FLAGS "-DF320p6288_LHC")
 
+	set(HDRS_320_WIB "Si5345-320p632_no_ref_apexsync-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
+	add_executable(clock_sync_320M_WIB ${SRCS} ${HDRS_320_WIB})
+	set_target_properties(clock_sync_320M_WIB PROPERTIES COMPILE_FLAGS "-DF320p632_WIB")
+	

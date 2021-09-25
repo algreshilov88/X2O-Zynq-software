@@ -2,16 +2,28 @@
 
 devmem="/root/busybox-armv7l devmem"
 # status
-name=(ha         rdy_ipmb_zynq los_10g    pim_alarm  link_stat_top rxchan_up_top link_stat_bot rxchan_up_bot hs           prbs_err  )
-addr=(0x41220008 0x41220008    0x41220008 0x41220008 0x41220008    0x41220008    0x41220008    0x41220008    0x41220008   0x41220008)
-bnum=(0          8             10         11         12            13            14            15            16           17        )
-mask=(0xff       3              1          1          1             1             1             1             1           0xf       )
+name=(ha         rdy_ipmb_zynq los_10g    pim_alarm  link_stat_top rxchan_up_top link_stat_bot rxchan_up_bot hs           prbs_err   prbs_err_sticky)
+addr=(0x41220008 0x41220008    0x41220008 0x41220008 0x41220008    0x41220008    0x41220008    0x41220008    0x41220008   0x41220008 0x41220008)
+bnum=(0          8             10         11         12            13            14            15            16           17         21)
+mask=(0xff       3              1          1          1             1             1             1             1           0xf        0xf)
+
+#more status
+name+=(payload_off_alarm_bot payload_off_alarm_top payload_off_alarm_qsfp pok_payload pok_change_bot pok_change_top pok_change_qsfp )
+addr+=(0x41220008            0x41220008            0x41220008             0x41220008  0x41220008     0x41220008     0x41220008 )
+bnum+=(25                    26                    27                     28          29             30             31         )
+mask+=(1                     1                     1                      1           1              1              1          )
 
 # control
-name+=(en_ipmb_zynq id         qvb_on_off prbs_sel    aurora_pma_init tx_polarity gtp_reset  channel_up_top c2c_slave_reset_top channel_up_bot c2c_slave_reset_bot)
-addr+=(0x41220000   0x41220000 0x41220000 0x41220000  0x41220000      0x41220000  0x41220000 0x41220000     0x41220000          0x41220000     0x41220000         )
-bnum+=(0            2          5          6           9               10          14         15             16                  17             18                 ) 
-mask+=(3            7          1          7           1               0xf         1          1              1                   1              1                  )
+name+=(en_ipmb_zynq id         qvb_on_off prbs_sel    aurora_pma_init tx_polarity gtp_reset  channel_up_top c2c_slave_reset_top channel_up_bot c2c_slave_reset_bot prbs_sticky_reset)
+addr+=(0x41220000   0x41220000 0x41220000 0x41220000  0x41220000      0x41220000  0x41220000 0x41220000     0x41220000          0x41220000     0x41220000          0x41220000)
+bnum+=(0            2          5          6           9               10          14         15             16                  17             18                  19) 
+mask+=(3            7          1          7           1               0xf         1          1              1                   1              1                   1)
+
+#more control
+name+=(pok_change_polarity_bot pok_change_polarity_top pok_change_polarity_qsfp pok_change_enable_bot pok_change_enable_top pok_change_enable_qsfp)
+addr+=(0x41220000              0x41220000              0x41220000               0x41220000            0x41220000            0x41220000            )
+bnum+=(20                      21                      22                       23                    24                    25                    )
+mask+=(1                       1                       1                        1                     1                     1                     )
 
 #syntax: devreg reg_name [wr_value]
 
