@@ -6,6 +6,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
+#include <random>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -31,10 +32,9 @@ using namespace std;
 int main (int argc, char* argv[])
 { 
 
-    int k = 0;
     if (setjmp(reset) != 0)
     {
-        printf("BUS ERROR, ejecting. k = %d\n", k);
+        printf("BUS ERROR, ejecting\n");
         exit (0);
     }
     signal (SIGBUS, sigbus_handler);
@@ -49,6 +49,11 @@ int main (int argc, char* argv[])
 	}
 
     string target = argv[1];
+    if (target.compare("top_bram_gem") == 0) // test BRAM @0 in KU15P, GEM design
+    {
+        DRP_BASE = 0x54020000;
+        DRP_SIZE = 0x10000; // 64KB
+    }
     if (target.compare("top_bram0") == 0) // test BRAM @0 in KU15P
     {
         DRP_BASE = 0x50000000;
@@ -95,6 +100,9 @@ int main (int argc, char* argv[])
         exit (1);
     }
 
+	std::default_random_engine generator;
+	std::uniform_int_distribution<uint64_t> distribution(0, 0xffffffffffffffffULL);
+
     uint64_t j = 0xff00000000000000ULL;
     while (true)
     {
@@ -102,7 +110,8 @@ int main (int argc, char* argv[])
         for (uint64_t i = 0; i < DRP_SIZE/8; i++)
         {
             //      printf ("i: %04llx\n", i); fflush (stdout);
-            pw[i] = (j << 10) + i;
+//            pw[i] = (j << 10) + i;
+            pw[i] = distribution(generator);
         }
 
         memset (pr, 0, DRP_SIZE);
@@ -120,7 +129,6 @@ int main (int argc, char* argv[])
             }
         }
         j++;
-		k++;
     }
 	return 0;
 }

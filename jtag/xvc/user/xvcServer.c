@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <errno.h>
 #include <string.h>
 #include <time.h>
@@ -20,6 +21,8 @@
 #include <netinet/tcp.h>
 #include <netinet/in.h>
 #include <pthread.h>
+
+#include "semaphore.h"
 
 #ifndef USE_IOCTL
 #define MAP_SIZE    0x10000
@@ -40,6 +43,7 @@ static char* char_dev = CHAR_DEV_PATH;
 #endif /* !USE_IOCTL */
 
 static int verbose = 0;
+int ind = 0;
 
 #define XVC_PORT 2542
 
@@ -58,7 +62,7 @@ static int sread(int fd, void *target, int len) {
 #ifndef USE_IOCTL
 int handle_data(int fd, volatile jtag_t* ptr) {
 #else /* USE_IOCTL */
-int handle_data(int fd, int fd_ioctl) {
+int handle_data(int fd, int fd_ioctl, int ind) {
 #endif /* !USE_IOCTL */
     char xvcInfo[32];
     unsigned int bufferSize = 2048;
@@ -66,6 +70,9 @@ int handle_data(int fd, int fd_ioctl) {
     sprintf(xvcInfo, "xvcServer_v1.0:%u\n", bufferSize);
 
     do {
+	unlock_device(ind);
+	lock_device(ind);
+
         char cmd[16];
         unsigned char buffer[bufferSize], result[bufferSize / 2];
         memset(cmd, 0, 16);
@@ -198,6 +205,8 @@ int handle_data(int fd, int fd_ioctl) {
             perror("write");
             return 1;
         }
+	unlock_device(ind);
+	lock_device(ind);
     } while (1);
 
     /* Note: Need to fix JTAG state updates, until then no exit is allowed */
@@ -220,7 +229,39 @@ void display_driver_properties(int fd_ioctl) {
     printf("INFO: debug_bridge size: 0x%lX\n", props.debug_bridge_size);
     printf("INFO: debug_bridge device tree compatibility string: %s\n\n", props.debug_bridge_compat_string);
 }
-#endif /* USE_IOCTL */
+
+void sig_handler(int signo)
+{
+    	if (signo == SIGUSR1) {
+        	reset_semaphore(ind);
+		exit(EXIT_SUCCESS);
+	} else if (signo == SIGABRT) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGQUIT) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGTERM) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGILL) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGFPE) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGINT) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGSEGV) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	} else if (signo == SIGHUP) {
+                reset_semaphore(ind);
+                exit(EXIT_SUCCESS);
+	}
+}
+#endif /* USE_IOCTL */ 
 
 int main(int argc, char **argv) {
     int i;
@@ -266,6 +307,19 @@ int main(int argc, char **argv) {
     close(fd_uio);
 #else /* USE_IOCTL */
     int fd_ioctl;
+    ind = (int) strtol(&char_dev[strlen(char_dev)-1], NULL, 10);
+
+    create_semaphore(ind);
+
+    signal(SIGUSR1, sig_handler);
+    signal(SIGQUIT, sig_handler);
+    signal(SIGTERM, sig_handler);
+    signal(SIGABRT, sig_handler);
+    signal(SIGFPE, sig_handler);
+    signal(SIGILL, sig_handler);
+    signal(SIGSEGV, sig_handler);
+    signal(SIGHUP, sig_handler);
+    signal(SIGINT, sig_handler);
 
     fd_ioctl = open(char_dev, O_RDWR | O_SYNC);
     if (fd_ioctl < 1) {
@@ -318,14 +372,20 @@ int main(int argc, char **argv) {
 
     maxfd = s;
 
+    lock_device(ind);
+
     while (1) {
         fd_set read = conn, except = conn;
         int fd;
+
+	unlock_device(ind);
 
         if (select(maxfd + 1, &read, 0, &except, 0) < 0) {
             perror("select");
             break;
         }
+
+	lock_device(ind);
 
         for (fd = 0; fd <= maxfd; ++fd) {
             if (FD_ISSET(fd, &read)) {
@@ -352,7 +412,7 @@ int main(int argc, char **argv) {
 #ifndef USE_IOCTL
                 } else if (handle_data(fd, ptr)) {
 #else /* USE_IOCTL */
-                } else if (handle_data(fd, fd_ioctl)) {
+                } else if (handle_data(fd, fd_ioctl, ind)) {
 #endif /* !USE_IOCTL */
                     printf("connection closed - fd %d\n", fd);
                     close(fd);
@@ -366,6 +426,9 @@ int main(int argc, char **argv) {
                     break;
             }
         }
+
+	unlock_device(ind);
+	lock_device(ind);
     }
 
 #ifndef USE_IOCTL

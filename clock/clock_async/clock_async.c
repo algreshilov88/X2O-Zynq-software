@@ -37,6 +37,16 @@
 #include "si5332-322.x-all-Registers.h" // 322.265625M all channels, for 25G GTY IBERT
 #endif
 
+#ifdef F156p25
+// all channels 156.26, except channel 4 = 250M for C2C
+#include "si5332-gty-156p25-gth-156p25-c2c-250-Registers.h"
+#endif
+
+#ifdef Y156p25_H250
+// all GTY = 156.25, all GTH = 250
+#include "si5332-gty-156p25-gth-250-Registers.h"
+#endif
+
 // Make the SDK console work in the debugger
 #define printf(...) \
  fprintf(stdout, __VA_ARGS__); \

@@ -15,6 +15,7 @@
 #include <string>
 
 #include "xvc_ioctl.h"
+#include "semaphore.h"
 
 #define KINTEX7_ID 0x03647093
 #define VIRTEX7_ID 0x33691093
@@ -439,6 +440,9 @@ else {
       exit(0);
     }
     char_path = argv[1];
+    int ind = (int) strtol(&argv[1][strlen(argv[1])-1], NULL, 10);
+    create_semaphore(ind);
+    lock_device(ind);
     // try opening the driver
     fd = open(char_path.c_str(), O_RDWR | O_SYNC);
     if (fd <= 0)
@@ -463,6 +467,7 @@ else {
     }
 
     close(fd);
+    unlock_device(ind);
 }
   return 0;
 }

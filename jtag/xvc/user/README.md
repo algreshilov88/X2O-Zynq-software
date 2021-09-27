@@ -31,3 +31,13 @@ will compile a simple verify_xilinx_xvc_driver.c test program to ensure the Linu
 Running
 `make clean`
 will remove any of these programs compiled by the Makefile.
+
+## Note
+Make sure that the xvc server process termination is configured without using the 
+`SIGKILL` 
+signal so as not to leave the semaphore blocked. You can use other termination signals such as 
+`SIGTERM` 
+, 
+`SIGQUIT` 
+etc. 
+
