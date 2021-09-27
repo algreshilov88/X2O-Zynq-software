@@ -6,10 +6,14 @@ i2cset -y $b 0x45 0x0a 0x55 # ports 11: 8 FF selection outputs
 i2cset -y $b 0x45 0x0b 0x55 # ports 15:12 FF selection outputs
 i2cset -y $b 0x45 0x0c 0x55 # ports 19:16 FF selection outputs
 i2cset -y $b 0x45 0x0d 0x55 # ports 23:20 FF selection outputs
-i2cset -y $b 0x45 0x0e 0xff # ports 27:24 POK inputs
-i2cset -y $b 0x45 0x0f 0xff # ports 31:28 POK inputs
+i2cset -y $b 0x45 0x0e 0xaa # ports 27:24 POK inputs without pullups
+i2cset -y $b 0x45 0x0f 0x6a # ports 30:28 POK inputs, P31 is output for interrupt
 i2cset -y $b 0x45 0x40 0xff # deselect FFs
 i2cset -y $b 0x45 0x48 0xff # deselect FFs
 i2cset -y $b 0x45 0x50 0xff # deselect FFs
 i2cset -y $b 0x45 0x24 0x00 # disable power sequencer
-i2cset -y $b 0x45 0x04 0x01 # enable register
+i2cset -y $b 0x45 0x06 0x3f # interrupt mask covers all POK inputs
+i2cset -y $b 0x45 0x04 0x81 # enable register and interrupt output P31
+# set POK change signal polarity
+./devreg.sh pok_change_polarity_top 1
+
