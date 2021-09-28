@@ -12,6 +12,7 @@ i2cset -y $b 0x45 0x40 0xff # deselect FFs
 i2cset -y $b 0x45 0x48 0xff # deselect FFs
 i2cset -y $b 0x45 0x50 0xff # deselect FFs
 i2cset -y $b 0x45 0x24 0x00 # disable power sequencer
+i2cset -y $b 0x45 0x5f 0x00 # default state for P31 when interrupt is disabled
 i2cset -y $b 0x45 0x06 0x3f # interrupt mask covers all POK inputs
 i2cset -y $b 0x45 0x04 0x81 # enable register and interrupt output P31
 # set POK change signal polarity
