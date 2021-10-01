@@ -1,6 +1,7 @@
 #program retimer for 10.2601216 G
 
-i2cset -y 3 0x18 0xff 0x04
+i2cset -y 3 0x18 0xff 0x04 # select channel 0 for writing
+# commands below program dividers and other parameters for target bit rate
 i2cset -y 3 0x18 0x60 0x4D
 i2cset -y 3 0x18 0x61 0xB3
 i2cset -y 3 0x18 0x62 0x4D
