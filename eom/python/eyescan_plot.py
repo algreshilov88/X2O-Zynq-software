@@ -23,8 +23,6 @@ def get_eye(scan_list):
     date = "N/A"
     time = "N/A"
     n = 0
-    k = 0
-    s = 64
 
     for row in scan_list:
         if row[0].startswith('Date and Time Started'):
@@ -112,7 +110,7 @@ def eyescan_plot(filename_i, filename_o, xaxis=True, yaxis=True, xticks_f=[],yti
     plt.ylabel("Voltage Position")
 
     # saving plot
-    #plt.savefig(filename_o,bbox_inches='tight')
+    plt.savefig(filename_o,bbox_inches='tight')
     # showing plot if needed
-    plt.show()
+    #plt.show()
     plt.close()
