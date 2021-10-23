@@ -4,7 +4,7 @@ b=2
 ./devreg.sh pok_change_enable_qsfp 0
 
 # payload sequence on 
-i2cset -y $b 0x10 0xff 0x09 0x21 i
+i2cset -y $b 0x10 0xff 0xff 0xff i
 
 # let power turn on
 #sleep 0.2
