@@ -92,7 +92,7 @@ long char_ctrl_ioctl(struct file *file_p, unsigned int cmd, unsigned long arg) {
 			break;
 	}
 
-	mmiowb();
+	//mmiowb();
 	spin_unlock_irqrestore(&file_p->f_path.dentry->d_inode->i_lock, irqflags);
 
 	return status;
@@ -162,7 +162,7 @@ int probe(struct platform_device* pdev) {
 			}
 
 #ifndef GET_DB_BY_RES
-			db_ptrs[i] = ioremap_nocache(db_addr, db_size);
+			db_ptrs[i] = ioremap(db_addr, db_size);
 #else
 			db_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 			if (db_res) {
