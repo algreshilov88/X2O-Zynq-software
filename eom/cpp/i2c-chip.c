@@ -16,10 +16,10 @@ typedef unsigned char   u8;
  * i2c_chip_initialize()
  *==============================================================*/
 int i2c_fd_bus;
-int i2c_bus = 3;
+int i2c_bus = 4;
 
 void i2c_chip_initialize( int argc, char* argv )
-{	
+{
 	char I2C_BUS[20];
 
 	if (argc == 1) {
@@ -44,7 +44,7 @@ void i2c_chip_deinitialize( void )
     {
 		perror("I2C_BUS close");
     }
-	
+
 	if (unlock_device(i2c_bus) < 0){exit(-1);}
 }
 

@@ -261,7 +261,7 @@ void sig_handler(int signo)
                 exit(EXIT_SUCCESS);
 	}
 }
-#endif /* USE_IOCTL */ 
+#endif /* USE_IOCTL */
 
 int main(int argc, char **argv) {
     int i;
@@ -280,7 +280,7 @@ int main(int argc, char **argv) {
                 char_dev = optarg;
                 break;
             case 'p':
-                xvc_port = atoi(optarg); 
+                xvc_port = atoi(optarg);
                 break;
             case '?':
                 fprintf(stderr, "usage: %s [-v] [-d dev_path(/dev/xilinx_xvc_driver)] [-p port(2542)]\n", *argv);

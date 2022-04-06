@@ -1,7 +1,7 @@
 # CONFIG for QSFP module rev 2
 
 [I2C_BUS]
-i2c_bus = 2
+i2c_bus = 3
 
 [I2C_CHIPS]
 # expansion chips that control module select bits

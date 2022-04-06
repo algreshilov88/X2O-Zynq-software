@@ -1,4 +1,4 @@
-b=0
+b=1
 i2cset -y $b 0x71 0 # disconnect all
 i2cset -y $b 0x71 1 # enable expander reg branch
 i2cset -y $b 0x45 0x09 0x55 # ports  7: 4 FF selection outputs
@@ -17,4 +17,3 @@ i2cset -y $b 0x45 0x06 0x3f # interrupt mask covers all POK inputs
 i2cset -y $b 0x45 0x04 0x81 # enable register and interrupt output P31
 # set POK change signal polarity
 ./devreg.sh pok_change_polarity_bot 1
-
