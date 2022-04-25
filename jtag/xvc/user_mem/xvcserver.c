@@ -213,15 +213,17 @@ int main(int argc, char **argv) {
 
    opterr = 0;
 
-   while ((c = getopt(argc, argv, "v")) != -1)
-      switch (c) {
-      case 'v':
-         verbose = 1;
-         break;
-      case '?':
-         fprintf(stderr, "usage: %s [-v]\n", *argv);
-         return 1;
-      }
+//   while ((c = getopt(argc, argv, "v")) != -1)
+//      switch (c) {
+//      case 'v':
+//         verbose = 1;
+//         break;
+//      case '?':
+//         fprintf(stderr, "usage: %s [-v]\n", *argv);
+//         return 1;
+//      }
+
+   unsigned long long base_addr = strtoll (argv[1], NULL, 16);
 
    fd_uio = open("/dev/mem", O_RDWR );
    if (fd_uio < 1) {
@@ -237,7 +239,7 @@ int main(int argc, char **argv) {
    }
 
    volatile jtag_t* ptr = (volatile jtag_t*) mmap(NULL, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
-					fd_uio, 0xA0000000);
+					fd_uio, base_addr);
    if (ptr == MAP_FAILED)
 				fprintf(stderr, "MMAP Failed\n");   
         

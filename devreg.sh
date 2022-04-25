@@ -25,6 +25,12 @@ addr+=(0x41220000              0x41220000              0x41220000               
 bnum+=(20                      21                      22                       23                    24                    25                    )
 mask+=(1                       1                       1                        1                     1                     1                     )
 
+name+=(ipmb_tx_en)
+addr+=(0x41200000)
+bnum+=(0         )
+mask+=(3         )
+
+
 #syntax: devreg reg_name [wr_value]
 
 if [ $1 ]

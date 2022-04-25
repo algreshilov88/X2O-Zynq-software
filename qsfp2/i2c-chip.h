@@ -9,3 +9,4 @@ void i2c_chip_deinitialize( void );
 int i2c_write(int i2c_fd_bus, u8 i2c_chip_addr, u8 reg, u8 data); 
 int i2c_write_qsfp2(int i2c_fd_bus, u8 i2c_chip_addr, u8 data[3]); 
 int i2c_read(int i2c_fd_snsr, u8 i2c_chip_addr, u8 reg, u8 *result);
+int i2c_read_qsfp2 (int i2c_fd_snsr, u8 i2c_chip_addr, u8 *result);

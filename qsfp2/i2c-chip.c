@@ -72,8 +72,8 @@ void i2c_chip_initialize( int argc, char* argv )
     }
     else{printf(strcat(I2C_BUS, " opened \n"));}
 
-	if (create_semaphore(i2c_bus) < 0) {exit(-1);}
-	if (lock_device(i2c_bus) < 0) {exit(-1);}
+//	if (create_semaphore(i2c_bus) < 0) {exit(-1);}
+//	if (lock_device(i2c_bus) < 0) {exit(-1);}
 
 	toml_free(config);
 	}
@@ -206,5 +206,46 @@ int i2c_read(int i2c_fd_bus, u8 i2c_chip_addr, u8 reg, u8 *result) {
     }
 
     *result = inbuf[0];
+    return 0;
+}
+
+int i2c_read_qsfp2(int i2c_fd_bus, u8 i2c_chip_addr, u8 *result) {
+    int retval;
+    long funcs;
+    u8 outbuf[1], inbuf[3];
+    struct i2c_msg msgs[2];
+    struct i2c_rdwr_ioctl_data msgset[1];
+
+    if (ioctl(i2c_fd_bus, I2C_FUNCS, &funcs) < 0)
+	{
+		perror("ioctl(I2C_FUNCS) in i2c_read");
+		return (-1);
+	}
+
+    assert(funcs & I2C_FUNC_I2C);
+
+
+    msgs[0].addr = i2c_chip_addr;
+    //msgs[1].flags = I2C_M_RD | I2C_M_NOSTART;
+    msgs[0].flags = I2C_M_RD;
+    msgs[0].len = 3;
+    msgs[0].buf = inbuf;
+
+    msgset[0].msgs = msgs;
+    msgset[0].nmsgs = 1;
+
+    inbuf[0] = 0;
+    inbuf[1] = 0;
+    inbuf[2] = 0;
+
+    *result = 0;
+    if (ioctl(i2c_fd_bus, I2C_RDWR, &msgset) < 0) {
+    //    perror("ioctl(I2C_RDWR) in i2c_read");
+        return (-1);
+    }
+
+    result[0] = inbuf[0];
+    result[1] = inbuf[1];
+    result[2] = inbuf[2];
     return 0;
 }

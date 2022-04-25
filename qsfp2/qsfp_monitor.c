@@ -53,7 +53,9 @@ int main(int argc, char * argv[])
 
 	if (argc == 2) 
 	{
+		printf ("attempting to get semaphore\n");
 		i2c_chip_initialize(argc, argv[1]);
+		printf ("semaphore acquired\n");
 
 		/* Open the file. */
 		if (0 == (fp = fopen(argv[1], "r"))) {
@@ -142,7 +144,7 @@ int main(int argc, char * argv[])
 			{1, 0, 0}, // QSFP 6
 			{1, 0, 2}, // QSFP 7
 			{1, 0, 4}, // QSFP 8
-			{1, 0, 0}, // QSFP 9
+			{1, 0, 6}, // QSFP 9
 			{1, 1, 0}, // QSFP 10 
 			{1, 1, 2}, // QSFP 11
 			{1, 1, 4}, // QSFP 12
@@ -167,9 +169,9 @@ int main(int argc, char * argv[])
 
 		uint8_t er[2][3]; // expansion register bytes
 
-		// loop over all QSFP modules
 		for (int i = 0; i < 30; i++)
 		{
+//			int i = mod_ind[j]; // temporary
 			qsfp_select_t qs = qsfp_select[i];
 
 			// initial values of the exp. regs are all ones
@@ -217,9 +219,71 @@ int main(int argc, char * argv[])
 				// convert to V according to QSFP-MSA.pdf page 53 line 19
 				float vv = ((float)v.v16)/10000.;
 
-				printf ("i: %2d T16: %04x TC: %2.1f V16: %04x VV: %1.2f\n", i, t.t16, tc, v.v16, vv);
+				if (vv < 3.2)
+				{
+					printf ("device %d voltage = %1.2f\n", i, vv);
+
+//					i2c_chip_deinitialize();
+//					exit (0);
+				}
+
+//				if (0)
+				{
+				// read interrupt flags
+				uint8_t los, laser_fault, cdr_lol;
+				i2c_read (i2c_fd_bus, qsfp_mod, 0x03, &los);
+				i2c_read (i2c_fd_bus, qsfp_mod, 0x04, &laser_fault);
+				i2c_read (i2c_fd_bus, qsfp_mod, 0x05, &cdr_lol);
+
+				uint8_t alarm[15];
+				i2c_read (i2c_fd_bus, qsfp_mod,  6, &alarm[ 6]);
+				i2c_read (i2c_fd_bus, qsfp_mod,  7, &alarm[ 7]);
+				i2c_read (i2c_fd_bus, qsfp_mod,  9, &alarm[ 9]);
+				i2c_read (i2c_fd_bus, qsfp_mod, 10, &alarm[10]);
+				i2c_read (i2c_fd_bus, qsfp_mod, 11, &alarm[11]);
+				i2c_read (i2c_fd_bus, qsfp_mod, 12, &alarm[12]);
+				i2c_read (i2c_fd_bus, qsfp_mod, 13, &alarm[13]);
+				i2c_read (i2c_fd_bus, qsfp_mod, 14, &alarm[14]);
+
+				uint8_t reg_193, options;
+				i2c_read (i2c_fd_bus, qsfp_mod, 221, &options);
+				i2c_read (i2c_fd_bus, qsfp_mod, 193, &reg_193);
+
+				// select page 3
+				uint8_t reg_238=0, reg_239=0, reg_225=0, ampl=0;
+/*
+				i2c_write (i2c_fd_bus, qsfp_mod, 127, 3);
+				// read RX amplitudes
+				i2c_read (i2c_fd_bus, qsfp_mod, 225, &reg_225);
+				switch (reg_225 & 0xf)
+				{
+					case (1)  : ampl = 0x00; break;
+					case (3)  : ampl = 0x11; break;
+					case (7)  : ampl = 0x22; break;
+					case (0xf): ampl = 0x33; break;
+				}
+				// reset amplitude to minimum
+				ampl = 0x00;
+				i2c_write (i2c_fd_bus, qsfp_mod, 238, ampl); // program max amplitudes
+				i2c_write (i2c_fd_bus, qsfp_mod, 239, ampl);
+				i2c_read (i2c_fd_bus, qsfp_mod, 238, &reg_238);
+				i2c_read (i2c_fd_bus, qsfp_mod, 239, &reg_239);
+
+				// back to page 0
+				i2c_write (i2c_fd_bus, qsfp_mod, 127, 0);
+*/
+				printf ("i: %2d T16: %04x TC: %2.1f V16: %04x VV: %1.2f LOS: %02x Laser: %02x LOL: %02x AL: %02x %02x %02x %02x %02x %02x %02x %02x OPT: %02x OPT: %02x AMPSUP: %02x AMP: %02x%02x\n", 
+						i, t.t16, tc, v.v16, vv, los, laser_fault, cdr_lol, alarm[6], alarm[7], alarm[9], alarm[10], alarm[11], alarm[12], alarm[13], alarm[14], reg_193, options, 
+						reg_225, reg_238, reg_239);
 				fflush (stdout);
+				}
 			}
+//			else
+//			{
+//				printf ("cannot read device %d\n", i);
+//				i2c_chip_deinitialize();
+//				exit (0);
+//			}
 		}
 
 		i2c_chip_deinitialize();

@@ -7,8 +7,11 @@ cmake_minimum_required(VERSION 2.8)
 	set(CMAKE_C_FLAGS "-lrt")
 	set(CMAKE_CXX_FLAGS "-lrt")
 	set(SRCS "qsfp_monitor.c" "toml.c" "i2c-chip.c" "semaphore.c")
+	set(SRCS_POK "qsfp_pok.c" "toml.c" "i2c-chip.c" "semaphore.c")
 
 	set(QSFP_MON "toml.h" "i2c-chip.h" "semaphore.h")
 	add_executable(qsfp_monitor ${SRCS} ${QSFP_MON})
 	set_target_properties(qsfp_monitor PROPERTIES COMPILE_FLAGS "-ggdb")
+	add_executable(qsfp_pok ${SRCS_POK} ${QSFP_MON})
+	set_target_properties(qsfp_pok PROPERTIES COMPILE_FLAGS "-ggdb")
 
