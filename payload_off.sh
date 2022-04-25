@@ -1,6 +1,5 @@
-#payload sequence off 
-i2cset -y 0 0x45 0x24 0x00
+#payload sequence off
 i2cset -y 1 0x45 0x24 0x00
+i2cset -y 2 0x45 0x24 0x00
 sleep 0.2
 ./devreg.sh qvb_on_off 0
-

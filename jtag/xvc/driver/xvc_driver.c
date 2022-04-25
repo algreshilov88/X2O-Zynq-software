@@ -41,7 +41,7 @@ static int xil_xvc_shift_bits(unsigned char* db_ptr, u32 tms_bits, u32 tdi_bits,
 	int status = 0;
 	u32 control_reg_data;
 	u32 write_reg_data;
-	int count = 100;
+	int count = 200;
 
 	// Set tms bits
 	iowrite32(tms_bits, db_ptr + TMS_REG_OFFSET);
