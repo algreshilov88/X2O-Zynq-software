@@ -1,12 +1,9 @@
 ## Overview
-"jtag_fw_programmer.cc" - Zynq compatible jtag firmware programmer tool to load connected bitstream using JTAG device driver on Zynq board
+"jtag_decoder.cc" - Zynq compatible jtag decoder tool to produce bitstream.dat binary for JTAG DMA transfer from on Zynq board
 
 ## Compilation
-To compile jtag_fw_programmer on Zynq run ‘cmake .’ then 'make'
-
-Make sure that "xilinx_xvc_driver.ko" is loaded
+To compile jtag_decoder on Zynq run ‘cmake .’ then 'make'
 
 ## Executing
-Run ‘jtag_fw_programmer /dev/device bitfile’
-    (for example ‘client_zynq_ioctl /dev/xilinx_xvc_driver_0 emtf_control_bm.bit’)
-
+Run 'jtag_decoder bitfile’
+    (NOTE: Header in bitfile should be removed. In this case please apply './fpga-bit-to-bin.py <.bit file name> <.bin file name>'.)
