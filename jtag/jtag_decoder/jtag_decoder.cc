@@ -61,7 +61,6 @@ void error(const char *msg)
 
 int shiftJtag(char* tms, char* tdi, int32_t length)
 {
-  struct jtag_dma_io jtag_dma_io;
   int n;
   int32_t num_bits = length;
   int32_t num_bytes = (num_bits+7)/8;
