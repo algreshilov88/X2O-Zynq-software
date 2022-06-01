@@ -16,6 +16,8 @@
 #define VIRTEX7_ID 0x33691093
 #define MAX_SHIFT_BUF 1024
 
+std::ofstream f("bitstream.dat", std::ios::out | std::ios::binary | std::ios::app);
+
 const uint8_t bitRevTable[256] =
 {
     0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
@@ -65,10 +67,8 @@ int shiftJtag(char* tms, char* tdi, int32_t length)
   int32_t num_bits = length;
   int32_t num_bytes = (num_bits+7)/8;
 
-  std::ofstream f("bitstream.dat", std::ios::out | std::ios::binary | std::ios::app);
   f.write(tms, sizeof tms);
   f.write(tdi, sizeof tdi);
-  f.close();
 
   n = num_bytes;
 
@@ -220,7 +220,10 @@ int main(int argc, char *argv[])
   if (binfile != NULL)
   {
     decode_binfile(binfile);
+    printf("Decoded!");
   }
+
+  f.close();
 
   return 0;
 }

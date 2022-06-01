@@ -6,4 +6,4 @@ To compile jtag_decoder on Zynq run ‘cmake .’ then 'make'
 
 ## Executing
 Run 'jtag_decoder bitfile’
-    (NOTE: Header in bitfile should be removed. In this case please apply './fpga-bit-to-bin.py <.bit file name> <.bin file name>'.)
+    (NOTE: Header in bitfile should be removed. In this case please apply 'python2 fpga-bit-to-bin.py <.bit file name> <.bin file name>'.)
