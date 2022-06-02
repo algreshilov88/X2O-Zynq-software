@@ -17,6 +17,9 @@
 
 std::ofstream f("bitstream.dat", std::ios::out | std::ios::binary | std::ios::app);
 
+char tms_vec[4] = {0, 0, 0, 0};
+char tdi_vec[4] = {0, 0, 0, 0};
+
 const uint8_t bitRevTable[256] =
 {
     0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
@@ -69,6 +72,12 @@ long shiftJtag(char* tms, char* tdi, int32_t length)
   f.write(tms, sizeof tms);
   f.write(tdi, sizeof tdi);
 
+  for (int i=0; i<4; i++)
+  {
+    tms_vec[i] = 0x0;
+    tdi_vec[i] = 0x0;
+  }
+
   n = num_bytes;
 
   return n;
@@ -88,7 +97,7 @@ long sleepJtag(int32_t delay)
 {
   long cnt = 0;
   long num_bits = delay;
-  char tck[4];
+  char tck[4] = {0, 0, 0, 0};
 
   while (cnt < delay) {
      num_bits = (delay < 32) ? delay : 32;
@@ -103,41 +112,30 @@ int decode_binfile(char* binfile)
 {
   int n=0;
 
-  char tms_vec[4];
-  char tdi_vec[4];
-
-  // TLR + enter SHIFT-IR
-  int32_t num_bits = 10;
+  int32_t num_bits = 32;
   tms_vec[0] = 0xDF;
-  tms_vec[1] = 0x0;
-  tdi_vec[0] = 0x0;
-  tdi_vec[1] = 0x0;
-
-  shiftJtag(tms_vec, tdi_vec, num_bits);
-
-  // JPROGRAM + enter RTI state
-  num_bits = 11;
-  tms_vec[0] = 0xE0;
-  tms_vec[1] = 0x01;
-  tdi_vec[0] = 0xB; // JPROGRAM
-  tdi_vec[1] = 0x0;
-
-  shiftJtag(tms_vec, tdi_vec, num_bits);
-
-  // CFG_IN + UPDATE-IR
-  num_bits = 8;
-  tms_vec[0] = 0x60;
-  tdi_vec[0] = 0x5; // CFG_IN
+  tms_vec[1] = 0x80;
+  tms_vec[2] = 0x07;
+  tms_vec[3] = 0x0C;
+  tdi_vec[0] = 0x00;
+  tdi_vec[1] = 0x2C;
+  tdi_vec[2] = 0xA0;
+  tdi_vec[3] = 0x00;
 
   shiftJtag(tms_vec, tdi_vec, num_bits);
 
   // delay for 10ms  or will need to change to 10000/20000 TCK in RTI state
   sleepJtag(400000);
 
-  // SELECT-DR + SHIFT-DR
-  num_bits = 3;
-  tms_vec[0] = 0x1;
-  tdi_vec[0] = 0x0;
+  num_bits = 32;
+  tms_vec[0] = 0x00;
+  tms_vec[1] = 0x00;
+  tms_vec[2] = 0x00;
+  tms_vec[3] = 0x20;
+  tdi_vec[0] = 0x00;
+  tdi_vec[1] = 0x00;
+  tdi_vec[2] = 0x00;
+  tdi_vec[3] = 0x00;
 
   shiftJtag(tms_vec, tdi_vec, num_bits);
 
@@ -168,39 +166,75 @@ int decode_binfile(char* binfile)
   while (cnt < (long) binfile_size) {
     nread = read(fd, buf, 4);
     cnt += nread;
+
     if (cnt == (int) binfile_size) {
        // printf("last bit\n");
        *(tms_vec+nread-1) = 0x80;
     }
+
     flipbytes((unsigned char*)buf, (unsigned char*)tdi_vec, nread);
-    shiftJtag(tms_vec, tdi_vec, nread*8);
-    // printf("\n");
+
+    if (nread == 3)
+    {
+      tms_vec[3] = 0x0D;
+      tdi_vec[3] = 0x00;
+
+      shiftJtag(tms_vec, tdi_vec, nread*8 + 8);
+    }
+
+    if (nread == 2)
+    {
+      tms_vec[2] = 0x0D;
+      tms_vec[3] = 0x18;
+      tdi_vec[2] = 0x00;
+      tdi_vec[3] = 0x03;
+
+      shiftJtag(tms_vec, tdi_vec, nread*8 + 16);
+    }
+
+    if (nread == 1)
+    {
+      tms_vec[1] = 0x0D;
+      tms_vec[2] = 0x18;
+      tms_vec[3] = 0x00;
+      tdi_vec[1] = 0x00;
+      tdi_vec[2] = 0x03;
+      tdi_vec[3] = 0x00;
+
+      shiftJtag(tms_vec, tdi_vec, nread*8 + 24);
+    }
   }
   printf("Read %ld bytes from binfile %s\n", cnt, binfile);
 
   if (fd) close(fd);
 
-  // UPDATE-DR + RTI + SELECT-IR + SHIFT-IR
-  num_bits = 6;
-  tms_vec[0] = 0xD;
-  tdi_vec[0] = 0x0;
+  if (nread == 3)
+  {
+    num_bits = 32;
+    tms_vec[0] = 0x18;
+    tms_vec[1] = 0x00;
+    tms_vec[2] = 0x00;
+    tms_vec[3] = 0x00;
+    tdi_vec[0] = 0x03;
+    tdi_vec[1] = 0x00;
+    tdi_vec[2] = 0x00;
+    tdi_vec[3] = 0x00;
 
-  shiftJtag(tms_vec, tdi_vec, num_bits);
-
-  // JSTART + UPDATE-IR + moveto RTI
-  num_bits = 7;
-  tms_vec[0] = 0x60;
-  tdi_vec[0] = 0x0C;
-
-  shiftJtag(tms_vec, tdi_vec, num_bits);
+    shiftJtag(tms_vec, tdi_vec, num_bits);
+  }
 
   // delay for 2ms  or will need to change to 2000 TCK in RTI state
   sleepJtag(2000);
 
-  // move to TLR
-  num_bits = 3;
-  tms_vec[0] = 0x7;
-  tdi_vec[0] = 0x0;
+  num_bits = 32;
+  tms_vec[0] = 0x00;
+  tms_vec[1] = 0x00;
+  tms_vec[2] = 0x00;
+  tms_vec[3] = 0xE0;
+  tdi_vec[0] = 0x00;
+  tdi_vec[1] = 0x00;
+  tdi_vec[2] = 0x00;
+  tdi_vec[3] = 0x00;
 
   shiftJtag(tms_vec, tdi_vec, num_bits);
 
