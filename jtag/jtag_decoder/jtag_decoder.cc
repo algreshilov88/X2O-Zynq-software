@@ -96,11 +96,10 @@ long flipbytes(unsigned char* src, unsigned char* flipped, long size)
 long sleepJtag(int32_t delay)
 {
   long cnt = 0;
-  long num_bits = delay;
+  long num_bits = 32;
   char tck[4] = {0, 0, 0, 0};
 
   while (cnt < delay) {
-     num_bits = (delay < 32) ? delay : 32;
      shiftJtag(tck, tck, num_bits);
      cnt += num_bits;
   }
@@ -229,7 +228,7 @@ int decode_binfile(char* binfile)
   }
 
   // delay for 2ms  or will need to change to 2000 TCK in RTI state
-  sleepJtag(2000);
+  sleepJtag(2016);
 
   num_bits = 32;
   tms_vec[0] = 0x00;
