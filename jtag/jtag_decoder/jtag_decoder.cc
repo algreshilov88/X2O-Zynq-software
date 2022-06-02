@@ -60,9 +60,9 @@ void error(const char *msg)
 }
 
 
-int shiftJtag(char* tms, char* tdi, int32_t length)
+long shiftJtag(char* tms, char* tdi, int32_t length)
 {
-  int n;
+  long n;
   int32_t num_bits = length;
   int32_t num_bytes = (num_bits+7)/8;
 
@@ -74,9 +74,9 @@ int shiftJtag(char* tms, char* tdi, int32_t length)
   return n;
 }
 
-int flipbytes(unsigned char* src, unsigned char* flipped, int size)
+long flipbytes(unsigned char* src, unsigned char* flipped, long size)
 {
-   for (int i=0; i<size; i++)
+   for (long i=0; i<size; i++)
     {
      *(flipped+i) = bitRevTable[*(src+i)];
       // printf ("0x%02x 0x%02x\n", *(src+i), *(flipped+i));
@@ -84,10 +84,10 @@ int flipbytes(unsigned char* src, unsigned char* flipped, int size)
   return size;
 }
 
-int sleepJtag(int32_t delay)
+long sleepJtag(int32_t delay)
 {
-  int cnt = 0;
-  int num_bits = delay;
+  long cnt = 0;
+  long num_bits = delay;
   char tck[4];
 
   while (cnt < delay) {
