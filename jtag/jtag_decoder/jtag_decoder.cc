@@ -174,6 +174,11 @@ int decode_binfile(char* binfile)
 
     flipbytes((unsigned char*)buf, (unsigned char*)tdi_vec, nread);
 
+    if (nread == 4)
+    {
+      shiftJtag(tms_vec, tdi_vec, nread*8);
+    }
+
     if (nread == 3)
     {
       tms_vec[3] = 0x0D;
