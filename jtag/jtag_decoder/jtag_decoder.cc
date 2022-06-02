@@ -162,20 +162,21 @@ int decode_binfile(char* binfile)
   else
   {
     binfile_size = st.st_size;
-    printf("binfile size: %ld\n", binfile_size);
+    printf("binfile size: %lld bytes\n", (long long) binfile_size);
   }
 
-  while ((nread = read(fd, buf, 4)) > 0) {
-    if (nread < 4) {
+  while (cnt < (int) binfile_size) {
+    nread = read(fd, buf, 4);
+    cnt += nread;
+    if (cnt == (int) binfile_size) {
        // printf("last bit\n");
        *(tms_vec+nread-1) = 0x80;
     }
     flipbytes((unsigned char*)buf, (unsigned char*)tdi_vec, nread);
     shiftJtag(tms_vec, tdi_vec, nread*8);
-    cnt += nread;
     // printf("\n");
   }
-  printf("\nRead %d bytes from binfile %s\n", cnt, binfile);
+  printf("Read %d bytes from binfile %s\n", cnt, binfile);
 
   if (fd) close(fd);
 
