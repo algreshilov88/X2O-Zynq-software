@@ -14,7 +14,6 @@
 
 #define KINTEX7_ID 0x03647093
 #define VIRTEX7_ID 0x33691093
-#define MAX_SHIFT_BUF 1024
 
 std::ofstream f("bitstream.dat", std::ios::out | std::ios::binary | std::ios::app);
 
@@ -89,16 +88,13 @@ int sleepJtag(int32_t delay)
 {
   int cnt = 0;
   int num_bits = delay;
-  char * tck = (char *)malloc(MAX_SHIFT_BUF);
-  bzero(tck, MAX_SHIFT_BUF);
+  char tck[4];
 
   while (cnt < delay) {
-     num_bits = (delay < MAX_SHIFT_BUF*8)?delay:MAX_SHIFT_BUF*8;
+     num_bits = (delay < 32) ? delay : 32;
      shiftJtag(tck, tck, num_bits);
      cnt += num_bits;
   }
-
-  free(tck);
 
   return delay;
 }
@@ -155,12 +151,26 @@ int decode_binfile(char* binfile)
     return -1;
   }
 
+  struct stat st;
+  off_t binfile_size;
+
+  if (stat(binfile, &st) < 0)
+  {
+    error("ERROR in stat()");
+    return -1;
+  }
+  else
+  {
+    binfile_size = st.st_size;
+    printf("binfile size: %ld\n", binfile_size);
+  }
+
   while ((nread = read(fd, buf, 4)) > 0) {
     if (nread < 4) {
        // printf("last bit\n");
        *(tms_vec+nread-1) = 0x80;
     }
-    flipbytes((unsigned char*)buf,(unsigned char*)tdi_vec,nread);
+    flipbytes((unsigned char*)buf, (unsigned char*)tdi_vec, nread);
     shiftJtag(tms_vec, tdi_vec, nread*8);
     cnt += nread;
     // printf("\n");
