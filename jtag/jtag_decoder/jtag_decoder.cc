@@ -142,8 +142,8 @@ int decode_binfile(char* binfile)
   shiftJtag(tms_vec, tdi_vec, num_bits);
 
   // Shift in the FPGA bitstream from binfile
-  int cnt = 0;
-  int nread = 4;
+  long cnt = 0;
+  long nread = 4;
   char buf[4];
   int fd = open(binfile, O_RDONLY);
   if (fd < 0) {
@@ -162,10 +162,10 @@ int decode_binfile(char* binfile)
   else
   {
     binfile_size = st.st_size;
-    printf("binfile size: %lld bytes\n", (long long) binfile_size);
+    printf("binfile size: %ld bytes\n", (long) binfile_size);
   }
 
-  while (cnt < (int) binfile_size) {
+  while (cnt < (long) binfile_size) {
     nread = read(fd, buf, 4);
     cnt += nread;
     if (cnt == (int) binfile_size) {
@@ -176,7 +176,7 @@ int decode_binfile(char* binfile)
     shiftJtag(tms_vec, tdi_vec, nread*8);
     // printf("\n");
   }
-  printf("Read %d bytes from binfile %s\n", cnt, binfile);
+  printf("Read %ld bytes from binfile %s\n", cnt, binfile);
 
   if (fd) close(fd);
 
