@@ -147,31 +147,26 @@ int decode_binfile(char* binfile)
 
   // Shift in the FPGA bitstream from binfile
   int cnt = 0;
-  int nread = MAX_SHIFT_BUF;
+  int nread = 4;
+  char buf[4];
   int fd = open(binfile, O_RDONLY);
-  if (fd<0) {
+  if (fd < 0) {
     error("ERROR opening binfile");
     return -1;
   }
-  char * tdi_buf = (char *)malloc(nread);
-  char * tms_buf = (char *)malloc(nread);
-  char * buf = (char *)malloc(nread);
-  if ((tms_buf != NULL) && (tdi_buf != NULL)) {
-    bzero(tms_buf, nread);
-    bzero(tdi_buf, nread);
-    while ((nread = read(fd,buf, MAX_SHIFT_BUF)) > 0){
-      if (nread < MAX_SHIFT_BUF) {
-         // printf("last bit\n");
-         *(tms_buf+nread-1) = 0x80;
-      }
-      flipbytes((unsigned char*)buf,(unsigned char*)tdi_buf,nread);
-      shiftJtag(tms_buf, tdi_buf, nread*8);
-      bzero(tdi_buf, nread);
-      cnt += nread;
-      // printf("\n");
+
+  while ((nread = read(fd, buf, 4)) > 0) {
+    if (nread < 4) {
+       // printf("last bit\n");
+       *(tms_vec+nread-1) = 0x80;
     }
-    printf("\nRead %d bytes from binfile %s\n", cnt, binfile);
+    flipbytes((unsigned char*)buf,(unsigned char*)tdi_vec,nread);
+    shiftJtag(tms_vec, tdi_vec, nread*8);
+    cnt += nread;
+    // printf("\n");
   }
+  printf("\nRead %d bytes from binfile %s\n", cnt, binfile);
+
   if (fd) close(fd);
 
   // UPDATE-DR + RTI + SELECT-IR + SHIFT-IR
@@ -220,7 +215,7 @@ int main(int argc, char *argv[])
   if (binfile != NULL)
   {
     decode_binfile(binfile);
-    printf("Decoded!");
+    printf("Decoded!\n");
   }
 
   f.close();
