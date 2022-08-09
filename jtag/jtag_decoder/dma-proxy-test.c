@@ -130,8 +130,6 @@ void *tx_thread(void *ch_ptr)
 	if (!binfile_size%BUFFER_SIZE)
 	{
 		num_transfers = binfile_size%BUFFER_SIZE;
-		unsigned int buf[num_transfers][BUFFER_SIZE / sizeof(unsigned int)];
-		rest_size = 0;
 
 		for (i = 0; i < num_transfers; i++) {
 			/* Set up the length for the DMA transfer and initialize the transmit
@@ -146,10 +144,10 @@ void *tx_thread(void *ch_ptr)
 			if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
 				printf("Proxy tx transfer error\n");
 
-			unsigned int *buffer = (unsigned int *)&channel_ptr->buf_ptr[buffer_id].buffer;
-
-			read(fd, buf[i], BUFFER_SIZE);
-			buffer = buf[i];
+				for (i = 0; i < BUFFER_SIZE / sizeof(unsigned int); i++)
+				{
+					read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[i], sizeof(unsigned int));
+				}
 
 			/* Restart the completed channel buffer to start another transfer and keep
 			 * track of the number of transfers in progress
@@ -159,7 +157,6 @@ void *tx_thread(void *ch_ptr)
 	} else
 	{
 		num_transfers = binfile_size%BUFFER_SIZE + 1;
-		unsigned int buf[num_transfers][BUFFER_SIZE];
 		rest_size = binfile_size - num_transfers * BUFFER_SIZE;
 
 		for (i = 0; i < num_transfers; i++) {
@@ -167,22 +164,38 @@ void *tx_thread(void *ch_ptr)
 			 * buffer to a known pattern.
 			 */
 			if (i < num_transfers-1)
+			{
 				channel_ptr->buf_ptr[buffer_id].length = BUFFER_SIZE;
 
+				/* Perform the DMA transfer and check the status after it completes
+				 * as the call blocks til the transfer is done.
+				 */
+				ioctl(channel_ptr->fd, FINISH_XFER, &buffer_id);
+				if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
+					printf("Proxy tx transfer error\n");
+
+				for (i = 0; i < BUFFER_SIZE / sizeof(unsigned int); i++)
+				{
+					read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[i], sizeof(unsigned int));
+				}
+			}
+
 			if (i == num_transfers-1)
+			{
 				channel_ptr->buf_ptr[buffer_id].length = rest_size;
 
-			/* Perform the DMA transfer and check the status after it completes
-			 * as the call blocks til the transfer is done.
-			 */
-			ioctl(channel_ptr->fd, FINISH_XFER, &buffer_id);
-			if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
-				printf("Proxy tx transfer error\n");
+				/* Perform the DMA transfer and check the status after it completes
+				 * as the call blocks til the transfer is done.
+				 */
+				ioctl(channel_ptr->fd, FINISH_XFER, &buffer_id);
+				if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
+					printf("Proxy tx transfer error\n");
 
-			unsigned int *buffer = (unsigned int *)&channel_ptr->buf_ptr[buffer_id].buffer;
-
-			read(fd, buf[i], BUFFER_SIZE);
-			buffer = buf[i];
+					for (i = 0; i < rest_size / sizeof(unsigned int); i++)
+					{
+						read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[i], sizeof(unsigned int));
+					}
+			}
 
 			/* Restart the completed channel buffer to start another transfer and keep
 			 * track of the number of transfers in progress
@@ -258,7 +271,7 @@ int main(int argc, char *argv[])
 
 	printf("Time: %d microseconds\n", (int) time_diff);
 	printf("Transfer size: %d KB\n", (int)((num_transfers - 1) * (BUFFER_SIZE / 1024) * max_channel_count) + ((int) rest_size / 1024) * max_channel_count);
-	printf("Throughput: %d MB / sec \n", mb_sec);
+	printf("Throughput: %d MB/sec \n", mb_sec);
 
 	/* Clean up all the channels before leaving */
 
