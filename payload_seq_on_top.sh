@@ -1,4 +1,6 @@
-b=2
+if [ $DEVREG ]
+then
+b=$I2C_FPGA_TOP
 i2cset -y $b 0x71 0 # disconnect all
 i2cset -y $b 0x71 1 # enable expander reg branch
 
@@ -6,13 +8,13 @@ i2cset -y $b 0x71 1 # enable expander reg branch
 i2cget -y $b 0x45 0x06
 
 # disable POK change reaction
-./devreg.sh pok_change_enable_bot 0
+./$DEVREG pok_change_enable_bot 0
 
 # payload sequence on
 i2cset -y $b 0x45 0x24 0x01
 
 # let power turn on
-sleep 0.2
+sleep 1
 
 # check POK bits from payload
 i2cget -y $b 0x45 0x58
@@ -21,4 +23,7 @@ i2cget -y $b 0x45 0x58
 i2cset -y $b 0x45 0x04 0x81
 
 #enable POK change reaction
-./devreg.sh pok_change_enable_top 1
+#./$DEVREG pok_change_enable_top 1
+else
+	echo 'source revision setup script'
+fi
