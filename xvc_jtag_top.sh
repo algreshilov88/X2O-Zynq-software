@@ -1,3 +1,3 @@
-insmod jtag/xvc/driver/xilinx_xvc_driver.ko
-jtag/xvc/user/xvcServer_ioctl -d /dev/xilinx_xvc_driver_1 -p 2553 
+insmod $XVC_DRIVER
+jtag/xvc/user/xvcServer_ioctl -d $XVC_DEV_TOP -p 2553 
 
