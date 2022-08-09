@@ -10,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
 
 #define KINTEX7_ID 0x03647093
 #define VIRTEX7_ID 0x33691093
