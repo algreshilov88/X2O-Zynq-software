@@ -80,7 +80,6 @@ struct channel {
 	pthread_t tid;
 };
 
-static int test_size;
 int num_transfers;
 long rest_size;
 char* binfile;
@@ -107,11 +106,11 @@ static uint64_t get_posix_clock_time_usec ()
  * The following function is the transmit thread to allow the transmit and the receive channels to be
  * operating simultaneously. Some of the ioctl calls are blocking so that multiple threads are required.
  */
-void tx_thread(struct channel *channel_ptr)
+void *tx_thread(void *ch_ptr)
 {
 	int i, buffer_id = 0;
 
-	buffer_id = 0;
+	struct channel *channel_ptr = ch_ptr;
 
   int fd = open(binfile, O_RDONLY);
   if (fd < 0) {
@@ -191,6 +190,8 @@ void tx_thread(struct channel *channel_ptr)
 			ioctl(channel_ptr->fd, START_XFER, &buffer_id);
 		}
 	}
+
+	return 0;
 }
 
 /*******************************************************************************************************************/
@@ -220,11 +221,6 @@ int main(int argc, char *argv[])
 	printf("DMA proxy test\n");
 
 	binfile = argv[1];
-
-	if ((argc != 3) && (argc != 4)) {
-		printf("Usage: dma-proxy-test <# of DMA transfers to perform> <# of bytes in each transfer in KB (< 1MB)> <optional verify, 0 or 1>\n");
-		exit(EXIT_FAILURE);
-	}
 
 	/* Open the file descriptors for each tx channel and map the kernel driver memory into user space */
 
@@ -258,7 +254,7 @@ int main(int argc, char *argv[])
 
 	end_time = get_posix_clock_time_usec();
 	time_diff = end_time - start_time;
-	mb_sec = ((1000000 / (double)time_diff) * ((num_transfers * max_channel_count * (double) BUFFER_SIZE) + max_channel_count * (double) test_size)) / 1000000;
+	mb_sec = ((1000000 / (double)time_diff) * ((num_transfers * max_channel_count * (double) BUFFER_SIZE) + max_channel_count * (double) rest_size)) / 1000000;
 
 	printf("Time: %d microseconds\n", (int) time_diff);
 	printf("Transfer size: %d KB\n", (int)((num_transfers - 1) * (BUFFER_SIZE / 1024) * max_channel_count) + ((int) rest_size / 1024) * max_channel_count);
