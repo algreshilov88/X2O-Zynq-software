@@ -123,7 +123,7 @@ int decode_binfile(char* binfile)
   shiftJtag(tms_vec, tdi_vec, num_bits);
 
   // delay for 10ms  or will need to change to 10000/20000 TCK in RTI state
-  sleepJtag(400000);
+  //sleepJtag(400000);
 
   num_bits = 32;
   tms_vec[0] = 0x00;
@@ -161,11 +161,10 @@ int decode_binfile(char* binfile)
     printf("binfile size: %ld bytes\n", (long) binfile_size);
   }
 
-  while (cnt < (long) binfile_size) {
-    nread = read(fd, buf, 4);
+  while ((nread = read(fd, buf, 4)) > 0) {
     cnt += nread;
 
-    if (cnt == (int) binfile_size) {
+    if (cnt == (long) binfile_size) {
        // printf("last bit\n");
        *(tms_vec+nread-1) = 0x80;
     }
