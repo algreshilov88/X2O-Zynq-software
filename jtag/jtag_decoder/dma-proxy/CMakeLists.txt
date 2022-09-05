@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(dma-proxy-test)
+project(dma_proxy_test)
 set(CMAKE_C_COMPILER /usr/bin/gcc)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_C_FLAGS "-lpthread -lrt -O3")
