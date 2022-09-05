@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 2.8)
+
+project(dma-proxy-test)
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_C_FLAGS "-lpthread -lrt -O3")
+set(CMAKE_CXX_FLAGS "-lpthread -lrt -O3")
+set(CMAKE_BUILD_TYPE Debug)
+set(SRCS "dma-proxy-test.c")
+set(HDRS "dma-proxy.h")
+add_executable(${PROJECT_NAME} ${SRCS} ${HDRS})

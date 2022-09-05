@@ -1,6 +1,8 @@
 /**
  * Copyright (C) 2021 Xilinx, Inc
  *
+ * Modified by Aleksei Greshilov, 2022 CERN, aleksei.greshilov@cern.ch
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may
  * not use this file except in compliance with the License. A copy of the
  * License is located at
@@ -108,9 +110,9 @@ static uint64_t get_posix_clock_time_usec ()
  */
 void *tx_thread(void *ch_ptr)
 {
-	int i, j, buffer_id = 0;
+  int i, j, buffer_id = 0;
 
-	struct channel *channel_ptr = ch_ptr;
+  struct channel *channel_ptr = ch_ptr;
 
   int fd = open(binfile, O_RDONLY);
   if (fd < 0) {
@@ -162,7 +164,7 @@ void *tx_thread(void *ch_ptr)
                                 if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
                                         printf("Proxy tx transfer error\n");
 
-																				usleep(10000);
+				usleep(10000);
   		}
 
 			if (i != 0)
@@ -193,7 +195,7 @@ void *tx_thread(void *ch_ptr)
 	} else
 	{
 		num_transfers = (binfile_size - 8)/BUFFER_SIZE + 2;
-		rest_size = (binfile_size - 8) - (num_transfers - 2) * BUFFER_SIZE;
+		rest_size = (binfile_size - 8) - ((num_transfers - 2) * BUFFER_SIZE);
 		printf("num_transfers = %d\n", num_transfers);
 		printf("rest_size = %ld\n", rest_size);
 
@@ -219,16 +221,17 @@ void *tx_thread(void *ch_ptr)
                          	ioctl(channel_ptr->fd, START_XFER, &buffer_id);
 
  				/* Perform the DMA transfer and check the status after it completes
-                                  * as the call blocks til the transfer is done.
-                                  */
-                                 ioctl(channel_ptr->fd, FINISH_XFER, &buffer_id);
-                                 if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
+                                 * as the call blocks til the transfer is done.
+                                 */
+                                ioctl(channel_ptr->fd, FINISH_XFER, &buffer_id);
+                                if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
                                          printf("Proxy tx transfer error\n");
 
-																				 usleep(10000);
+				usleep(10000);
  			}
 
-			if (i < num_transfers - 1 && i != 0)
+			if (i < num_transfers-1 && i != 0)
+			//if (i < num_transfers-1)
 			{
 				channel_ptr->buf_ptr[buffer_id].length = BUFFER_SIZE;
 
@@ -253,7 +256,7 @@ void *tx_thread(void *ch_ptr)
                                         printf("Proxy tx transfer error\n");
 			}
 
-			if (i == num_transfers - 1)
+			if (i == num_transfers-1)
 			{
 				channel_ptr->buf_ptr[buffer_id].length = rest_size;
 
@@ -277,11 +280,6 @@ void *tx_thread(void *ch_ptr)
                                 if (channel_ptr->buf_ptr[buffer_id].status != PROXY_NO_ERROR)
                                         printf("Proxy tx transfer error\n");
 			}
-
-			/* Restart the completed channel buffer to start another transfer and keep
-			 * track of the number of transfers in progress
-			 */
-			ioctl(channel_ptr->fd, START_XFER, &buffer_id);
 		}
 	}
 
@@ -341,7 +339,7 @@ int main(int argc, char *argv[])
 
 	/* Do the minimum to know the transfers are done before getting the time for performance */
 
-  for (i = 0; i < TX_CHANNEL_COUNT; i++)
+  	for (i = 0; i < TX_CHANNEL_COUNT; i++)
 		pthread_join(tx_channels[i].tid, NULL);
 
 	/* Grab the end time and calculate the performance */
@@ -351,7 +349,7 @@ int main(int argc, char *argv[])
 	mb_sec = ((1000000 / (double)time_diff) * (((num_transfers-2) * max_channel_count * (double) BUFFER_SIZE) + max_channel_count * (double) rest_size + max_channel_count * 8)) / 1000000;
 
 	printf("Time: %d microseconds\n", (int) time_diff);
-	printf("Transfer size: %d Bytes\n", (((num_transfers - 2) * BUFFER_SIZE * max_channel_count) + (int) rest_size * max_channel_count + max_channel_count * 8));
+	printf("Transfer size: %d Bytes\n", (((num_transfers - 2) * BUFFER_SIZE * max_channel_count) + (int) rest_size * max_channel_count + 8 * max_channel_count));
 	printf("Throughput: %d MB/sec \n", mb_sec);
 
 	/* Clean up all the channels before leaving */
