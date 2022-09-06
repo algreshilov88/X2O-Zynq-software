@@ -70,6 +70,7 @@
  */
 #define TX_CHANNEL_COUNT 1
 #define RX_CHANNEL_COUNT 1
+#define MAX_SHIFT_BUF 	 4096
 
 const char *tx_channel_names[] = { "dma_proxy_tx", /* add unique channel names here */ };
 const char *rx_channel_names[] = { "dma_proxy_rx", /* add unique channel names here */ };
@@ -110,24 +111,29 @@ static uint64_t get_posix_clock_time_usec ()
  */
 void *tx_thread(void *ch_ptr)
 {
-  int i, j, buffer_id = 0;
+	unsigned int i, j, k, cntj = 0, buffer_id = 0;
+	unsigned int nread = MAX_SHIFT_BUF;
+	unsigned int cnt = 0; 
+	//unsigned int * buf = (unsigned int *)malloc(nread);
+	unsigned int buf[MAX_SHIFT_BUF / sizeof(unsigned int)] = { 0 }; 
+	struct channel *channel_ptr = ch_ptr;
 
-  struct channel *channel_ptr = ch_ptr;
+	//bzero(buf, nread);
 
-  int fd = open(binfile, O_RDONLY);
-  if (fd < 0) {
-    perror("ERROR opening binfile");
-  }
+  	int fd = open(binfile, O_RDONLY);
+  	if (fd < 0) {
+    		perror("ERROR opening binfile");
+  	}
 
-  if (stat(binfile, &st) < 0)
-  {
-    perror("ERROR in stat()");
-  }
-  else
-  {
-    binfile_size = st.st_size;
-    printf("binfile size: %ld bytes\n", (long) binfile_size);
-  }
+  	if (stat(binfile, &st) < 0)
+  	{
+    		perror("ERROR in stat()");
+  	}
+  	else
+  	{
+    		binfile_size = st.st_size;
+    		printf("binfile size: %ld bytes\n", (long) binfile_size);
+  	}
 
 	if (!(binfile_size - 8)%BUFFER_SIZE)
 	{
@@ -141,23 +147,23 @@ void *tx_thread(void *ch_ptr)
 			 * buffer to a known pattern.
 			 */
 			if (i == 0)
-  		{
-  			channel_ptr->buf_ptr[buffer_id].length = 8;
-
-  			/* Perform the DMA transfer and check the status after it completes
-  			* as the call blocks til the transfer is done.
-  			*/
-  			for (j = 0; j < 8 / sizeof(unsigned int); j++)
   			{
-  				read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[j], sizeof(unsigned int));
-  			}
+  				channel_ptr->buf_ptr[buffer_id].length = 8;
 
-  			/* Restart the completed channel buffer to start another transfer and keep
+  				/* Perform the DMA transfer and check the status after it completes
+  				* as the call blocks til the transfer is done.
+  				*/
+  				for (j = 0; j < 8 / sizeof(unsigned int); j++)
+  				{
+  					read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[j], sizeof(unsigned int));
+  				}
+
+  				/* Restart the completed channel buffer to start another transfer and keep
                           	 * track of the number of transfers in progress
                           	 */
                         	ioctl(channel_ptr->fd, START_XFER, &buffer_id);
 
-  			/* Perform the DMA transfer and check the status after it completes
+  				/* Perform the DMA transfer and check the status after it completes
                                  * as the call blocks til the transfer is done.
                                  */
                                 ioctl(channel_ptr->fd, FINISH_XFER, &buffer_id);
@@ -165,19 +171,30 @@ void *tx_thread(void *ch_ptr)
                                         printf("Proxy tx transfer error\n");
 
 				usleep(10000);
-  		}
+  			}
 
 			if (i != 0)
 			{
+				cnt = 0;
+
 				channel_ptr->buf_ptr[buffer_id].length = BUFFER_SIZE;
 
 				/* Perform the DMA transfer and check the status after it completes
-				 * as the call blocks til the transfer is done.
-				 */
-					for (j = 0; j < BUFFER_SIZE / sizeof(unsigned int); j++)
-					{
-						read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[j], sizeof(unsigned int));
-					}
+                                 * as the call blocks til the transfer is done.
+                                 */
+				for (k = 0; k < BUFFER_SIZE / MAX_SHIFT_BUF; k++)
+                                {
+                                        nread = read(fd, buf, MAX_SHIFT_BUF);
+
+                                        for (j = 0; j < nread / sizeof(unsigned int); j++)
+                                        {
+                                                cntj = cnt / sizeof(unsigned int) + j;
+                                                channel_ptr->buf_ptr[buffer_id].buffer[cntj] = buf[j];
+                                        }
+
+                                        //bzero(buf, nread);
+                                        cnt += nread;
+                                }
 
 				/* Restart the completed channel buffer to start another transfer and keep
 				 * track of the number of transfers in progress
@@ -231,16 +248,26 @@ void *tx_thread(void *ch_ptr)
  			}
 
 			if (i < num_transfers-1 && i != 0)
-			//if (i < num_transfers-1)
 			{
+				cnt = 0;
+				
 				channel_ptr->buf_ptr[buffer_id].length = BUFFER_SIZE;
 
 				/* Perform the DMA transfer and check the status after it completes
-				 * as the call blocks til the transfer is done.
-				 */
-				for (j = 0; j < BUFFER_SIZE / sizeof(unsigned int); j++)
+                                 * as the call blocks til the transfer is done.
+                                 */
+				for (k = 0; k < BUFFER_SIZE / MAX_SHIFT_BUF; k++)
 				{
-					read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[j], sizeof(unsigned int));
+					nread = read(fd, buf, MAX_SHIFT_BUF);
+
+					for (j = 0; j < nread / sizeof(unsigned int); j++)
+					{
+						cntj = cnt / sizeof(unsigned int) + j;
+						channel_ptr->buf_ptr[buffer_id].buffer[cntj] = buf[j];
+					}
+
+					//bzero(buf, nread);
+					cnt += nread;
 				}
 
 				/* Restart the completed channel buffer to start another transfer and keep
@@ -258,14 +285,25 @@ void *tx_thread(void *ch_ptr)
 
 			if (i == num_transfers-1)
 			{
+				cnt = 0;
+
 				channel_ptr->buf_ptr[buffer_id].length = rest_size;
 
 				/* Perform the DMA transfer and check the status after it completes
-				 * as the call blocks til the transfer is done.
-				 */
-				for (j = 0; j < rest_size / sizeof(unsigned int); j++)
+                                 * as the call blocks til the transfer is done.
+                                 */
+				for (k = 0; k < rest_size / MAX_SHIFT_BUF; k++)
 				{
-					read(fd, &channel_ptr->buf_ptr[buffer_id].buffer[j], sizeof(unsigned int));
+					nread = read(fd, buf, MAX_SHIFT_BUF);
+
+					for (j = 0; j < nread / sizeof(unsigned int); j++)
+					{
+						cntj = cnt / sizeof(unsigned int) + j;
+						channel_ptr->buf_ptr[buffer_id].buffer[cntj] = buf[j];
+					}
+
+					//bzero(buf, nread);
+					cnt += nread;
 				}
 
 				/* Restart the completed channel buffer to start another transfer and keep
