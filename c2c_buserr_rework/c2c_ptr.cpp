@@ -6,7 +6,6 @@
 #include <fstream>
 #include <map>
 #include <vector>
-#include <random>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -49,16 +48,10 @@ int main (int argc, char* argv[])
 	}
 
     string target = argv[1];
-    if (target.compare("top_bram_gem") == 0) // test BRAM @0 in KU15P, GEM design
-    {
-        DRP_BASE = 0x54020000;
-        DRP_SIZE = 0x10000; // 64KB
-    }
     if (target.compare("top_bram0") == 0) // test BRAM @0 in KU15P
     {
         DRP_BASE = 0x450000000;
-//        DRP_SIZE = 0x10000; // 64KB
-	DRP_SIZE = 8;        
+        DRP_SIZE = 0x10000; // 64KB
     }
     if (target.compare("top_bram2") == 0) // test BRAM @0x2000000 in KU15P
     {
@@ -91,15 +84,7 @@ int main (int argc, char* argv[])
     sys_fd = ::open("/dev/mem", O_RDWR | O_SYNC);
     if (sys_fd != -1)
         sys_vptr = (uint8_t *)mmap(NULL, DRP_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, sys_fd, DRP_BASE);
-    else 
-    {
-	    printf ("cannot open /dev/mem");
-	    sys_vptr = NULL;
-	    exit (0);
-    }
-    printf ("test reading\n");
-    fflush (stdout);
-    uint64_t rt = *((uint64_t*) sys_vptr);
+    else sys_vptr = NULL;
 
     uint64_t* pw = (uint64_t*) malloc (DRP_SIZE);
     uint64_t* pr = (uint64_t*) malloc (DRP_SIZE);
@@ -109,40 +94,31 @@ int main (int argc, char* argv[])
         exit (1);
     }
 
-	std::default_random_engine generator;
-	std::uniform_int_distribution<uint64_t> distribution(0, 0xffffffffffffffffULL);
-
     uint64_t j = 0xff00000000000000ULL;
-    printf ("main loop\n");
-    fflush (stdout);
-    while (true)
-    {
-        //  printf ("writing\n"); fflush (stdout);
-        for (uint64_t i = 0; i < DRP_SIZE/8; i++)
-        {
-            //      printf ("i: %04llx\n", i); fflush (stdout);
-//            pw[i] = (j << 10) + i;
-            pw[i] = distribution(generator);
-        }
+	while (true)
+	{
+		//      printf ("writing\n"); fflush (stdout);
+		for (uint64_t i = 0; i < DRP_SIZE/8; i++)
+		{
+			//              printf ("i: %04llx\n", i); fflush (stdout);
+			uint64_t k = (j << 10) + i;
+			mwrite (&k, i*8);
+		}
 
-        memset (pr, 0, DRP_SIZE);
-        memcpy (sys_vptr, pw, DRP_SIZE);
-        memcpy (pr, sys_vptr, DRP_SIZE);
-
-        printf ("*"); fflush (stdout);
-
-        uint64_t rb;
-        for (uint64_t i = 0; i < DRP_SIZE/8; i++)
-        {
-            if (pw[i] != pr[i])
-            {
-                printf ("w: %04llx r: %04llx\n", pw[i], pr[i]);
-                fflush (stdout);
-            }
-        }
-	
-        j++;
-    }
+		//      printf ("reading\n"); fflush (stdout);
+		uint64_t rb;
+		for (uint64_t i = 0; i < DRP_SIZE/8; i++)
+		{
+			uint64_t k = (j << 10) + i;
+			mread (&rb, i*8);
+			if (rb != k)
+			{
+				printf ("k: %04llx rb: %04llx\n", k, rb);
+				fflush (stdout);
+			}
+		}
+		j++;
+	}
 	return 0;
 }
 
