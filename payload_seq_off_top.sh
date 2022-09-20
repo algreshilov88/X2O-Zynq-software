@@ -1,6 +1,6 @@
 if [ $DEVREG ]
 then
-b=$I2C_FPGA_TOP
+b=$TOP_JTAG
 i2cset -y $b 0x71 0 # disconnect all
 i2cset -y $b 0x71 1 # enable expander reg branch
 

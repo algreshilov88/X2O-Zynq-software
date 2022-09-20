@@ -1,7 +1,7 @@
 
-if [ $I2C_FPGA_TOP ]
+if [ $TOP_JTAG ]
 then
-	b=$I2C_FPGA_TOP
+	b=$TOP_JTAG
 	i2cset -y $b 0x71 0 # disconnect all
 	i2cset -y $b 0x71 1 # enable expander reg branch
 	i2cset -y $b 0x45 0x09 0x55 # ports  7: 4 FF selection outputs

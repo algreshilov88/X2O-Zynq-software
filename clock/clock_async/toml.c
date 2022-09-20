@@ -1953,7 +1953,7 @@ int toml_rtob(toml_raw_t src, int* ret_)
 
 
 /* Raw to integer */
-int toml_rtoi(toml_raw_t src, int64_t* ret_)
+int toml_rtoi(toml_raw_t src, long long int* ret_)
 {
 	if (!src) return -1;
 	
