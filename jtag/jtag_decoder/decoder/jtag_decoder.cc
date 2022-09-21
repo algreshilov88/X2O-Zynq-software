@@ -15,6 +15,7 @@ std::ofstream f("bitstream.dat", std::ios::out | std::ios::binary | std::ios::ap
 
 char tms_vec[4] = {0, 0, 0, 0};
 char tdi_vec[4] = {0, 0, 0, 0};
+char t_vec[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 const uint8_t bitRevTable[256] =
 {
@@ -58,11 +59,17 @@ void error(const char *msg)
   exit(0);
 }
 
-
 void shiftJtag(char* tms, char* tdi)
 {
-  f.write(tms, sizeof tms);
-  f.write(tdi, sizeof tdi);
+  for (int i=0; i<8; i++)
+  {
+    if (i<4)
+       t_vec[i] = tms_vec[i];
+    else
+       t_vec[i] = tdi_vec[i-4];
+  }
+
+  f.write(t_vec, sizeof t_vec);
 
   for (int i=0; i<4; i++)
   {
