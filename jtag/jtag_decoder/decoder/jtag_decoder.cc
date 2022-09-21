@@ -78,7 +78,6 @@ void shiftJtag(char* tms, char* tdi)
   }
 }
 
-
 void flipbytes(unsigned char* src, unsigned char* flipped)
 {
    for (int i=0; i<4; i++)
