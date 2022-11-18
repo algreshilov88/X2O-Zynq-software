@@ -40,7 +40,7 @@ int main (int argc, char* argv[])
     signal (SIGBUS, sigbus_handler);
 
 
-    uint32_t DRP_BASE, DRP_SIZE;
+    uint64_t DRP_BASE, DRP_SIZE;
 
 	if (argc < 2)
 	{
@@ -56,27 +56,28 @@ int main (int argc, char* argv[])
     }
     if (target.compare("top_bram0") == 0) // test BRAM @0 in KU15P
     {
-        DRP_BASE = 0x50000000;
-        DRP_SIZE = 0x10000; // 64KB
+        DRP_BASE = 0x450000000;
+//        DRP_SIZE = 0x10000; // 64KB
+	DRP_SIZE = 8;        
     }
     if (target.compare("top_bram2") == 0) // test BRAM @0x2000000 in KU15P
     {
-        DRP_BASE = 0x52000000;
+        DRP_BASE = 0x452000000;
         DRP_SIZE = 0x10000; // 64KB
     }
     if (target.compare("bot_bram0") == 0) // test BRAM @0 in KU15P
     {
-        DRP_BASE = 0x58000000;
+        DRP_BASE = 0x460000000;
         DRP_SIZE = 0x10000; // 64KB
     }
     if (target.compare("bot_bram2") == 0) // test BRAM @0x2000000 in KU15P
     {
-        DRP_BASE = 0x5a000000;
+        DRP_BASE = 0x462000000;
         DRP_SIZE = 0x10000; // 64KB
     }
     if (target.compare("lb") == 0) // loopback BRAM in ZYNQ
     {
-        DRP_BASE = 0x43c30000;
+        DRP_BASE = 0x470000000;
         DRP_SIZE = 0x2000; // 8KB
     }
     if (target.compare("lb_gmt") == 0) // loopback BRAM in ZYNQ with GMT design
@@ -90,7 +91,15 @@ int main (int argc, char* argv[])
     sys_fd = ::open("/dev/mem", O_RDWR | O_SYNC);
     if (sys_fd != -1)
         sys_vptr = (uint8_t *)mmap(NULL, DRP_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, sys_fd, DRP_BASE);
-    else sys_vptr = NULL;
+    else 
+    {
+	    printf ("cannot open /dev/mem");
+	    sys_vptr = NULL;
+	    exit (0);
+    }
+    printf ("test reading\n");
+    fflush (stdout);
+    uint64_t rt = *((uint64_t*) sys_vptr);
 
     uint64_t* pw = (uint64_t*) malloc (DRP_SIZE);
     uint64_t* pr = (uint64_t*) malloc (DRP_SIZE);
@@ -104,6 +113,8 @@ int main (int argc, char* argv[])
 	std::uniform_int_distribution<uint64_t> distribution(0, 0xffffffffffffffffULL);
 
     uint64_t j = 0xff00000000000000ULL;
+    printf ("main loop\n");
+    fflush (stdout);
     while (true)
     {
         //  printf ("writing\n"); fflush (stdout);
@@ -118,7 +129,8 @@ int main (int argc, char* argv[])
         memcpy (sys_vptr, pw, DRP_SIZE);
         memcpy (pr, sys_vptr, DRP_SIZE);
 
-        //  printf ("reading\n"); fflush (stdout);
+        printf ("*"); fflush (stdout);
+
         uint64_t rb;
         for (uint64_t i = 0; i < DRP_SIZE/8; i++)
         {
@@ -128,6 +140,7 @@ int main (int argc, char* argv[])
                 fflush (stdout);
             }
         }
+	
         j++;
     }
 	return 0;

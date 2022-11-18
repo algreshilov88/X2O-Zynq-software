@@ -1,6 +1,6 @@
-./devreg.sh prbs_err
-./devreg.sh prbs_err_sticky
+./devreg_us.sh prbs_err
+./devreg_us.sh prbs_err_sticky
 echo 'reset sticky errors'
-./devreg.sh prbs_sticky_reset 1
-./devreg.sh prbs_sticky_reset 0
+./devreg_us.sh prbs_sticky_reset 1
+./devreg_us.sh prbs_sticky_reset 0
 

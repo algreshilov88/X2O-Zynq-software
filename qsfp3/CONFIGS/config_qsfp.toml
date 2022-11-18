@@ -1,0 +1,11 @@
+# CONFIG for QSFP module rev 2
+
+[I2C_BUS]
+i2c_bus = 3
+
+[I2C_CHIPS]
+# expansion chips that control module select bits
+exp_a = [0x44]
+exp_b = [0x41]
+# qsfp module address
+qsfp_mod = [0x50]
