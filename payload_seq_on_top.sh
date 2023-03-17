@@ -1,4 +1,6 @@
-b=2
+if [ $DEVREG ]
+then
+b=$TOP_JTAG
 i2cset -y $b 0x71 0 # disconnect all
 i2cset -y $b 0x71 1 # enable expander reg branch
 
@@ -6,7 +8,7 @@ i2cset -y $b 0x71 1 # enable expander reg branch
 i2cget -y $b 0x45 0x06
 
 # disable POK change reaction
-./devreg.sh pok_change_enable_bot 0
+./$DEVREG pok_change_enable_bot 0
 
 # payload sequence on
 i2cset -y $b 0x45 0x24 0x01
@@ -21,4 +23,7 @@ i2cget -y $b 0x45 0x58
 i2cset -y $b 0x45 0x04 0x81
 
 #enable POK change reaction
-./devreg.sh pok_change_enable_top 1
+./$DEVREG pok_change_enable_top 1
+else
+	echo 'source revision setup script'
+fi

@@ -1,6 +1,12 @@
-echo 'POK status BOT'
-i2cset -y 1 0x71 1
-i2cget -y 1 0x45 0x58
+if [ $DEVREG ]
+then
+#echo 'POK status BOT'
+#i2cset -y $BOT_JTAG 0x71 1
+#i2cget -y $BOT_JTAG 0x45 0x58
 echo 'POK status TOP'
-i2cset -y 2 0x71 1
-i2cget -y 2 0x45 0x58
+i2cset -y $TOP_JTAG 0x71 1
+i2cget -y $TOP_JTAG 0x45 0x58
+else
+        echo 'source revision setup script'
+fi
+
