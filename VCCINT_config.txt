@@ -1,0 +1,4 @@
+octopus.configure_ltm4700(octopus.south_bus,0x4d,90)
+octopus.configure_ltm4700(octopus.south_bus,0x4e,90)
+octopus.configure_ltm4700(octopus.south_bus,0x4f,90)
+

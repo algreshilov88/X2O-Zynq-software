@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/local/lib64/python3.6/site-packages/dumbo/i2c.py", line 2565, in configure_ltm4700
+    bus.write_byte_data(addr,0x0,ch)
+  File "/usr/local/lib64/python3.6/site-packages/dumbo/i2c.py", line 189, in write_byte_data
+    raise Exception('I2C acknowledge failed')
+Exception: I2C acknowledge failed
+>>> octopus.configure_ltm4700(octopus.south_bus,0x4e,90)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/local/lib64/python3.6/site-packages/dumbo/i2c.py", line 2565, in configure_ltm4700
+    bus.write_byte_data(addr,0x0,ch)
+  File "/usr/local/lib64/python3.6/site-packages/dumbo/i2c.py", line 189, in write_byte_data
+    raise Exception('I2C acknowledge failed')
+Exception: I2C acknowledge failed
+>>> octopus.configure_ltm4700(octopus.south_bus,0x4f,90)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/local/lib64/python3.6/site-packages/dumbo/i2c.py", line 2565, in configure_ltm4700
+    bus.write_byte_data(addr,0x0,ch)
+  File "/usr/local/lib64/python3.6/site-packages/dumbo/i2c.py", line 189, in write_byte_data
+    raise Exception('I2C acknowledge failed')
+Exception: I2C acknowledge failed
+
