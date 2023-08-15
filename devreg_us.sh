@@ -25,10 +25,10 @@ addr+=(0x441220000             0x441220000             0x441220000              
 bnum+=(20                      21                      22                       23                    24                    25                    )
 mask+=(1                       1                       1                        1                     1                     1                     )
 
-name+=(ipmb_tx_en  bp_clk_sel_top bp_clk_sel_bot)
-addr+=(0x441200000 0x44120000     0x44120000    )
-bnum+=(0           26             27            )
-mask+=(3           1              1             )
+name+=(ipmb_tx_en  bp_clk_sel_top  bp_clk_sel_bot)
+addr+=(0x441220000 0x441220000     0x441220000   )
+bnum+=(0           26              27            )
+mask+=(3           1               1             )
 
 
 #syntax: devreg reg_name [wr_value]
