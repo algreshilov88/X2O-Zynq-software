@@ -25,3 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 	add_executable(clock_async_Y156_H250 ${SRCS} ${HDRS_156M})
 	set_target_properties(clock_async_Y156_H250 PROPERTIES COMPILE_FLAGS "-DY156p25_H250")
 
+	set(HDRS_120M "si5332-120-all-Registers.h" "toml.h" "i2c-chip.h" "semaphore.h")
+	add_executable(clock_async_120M ${SRCS} ${HDRS_120M})
+	set_target_properties(clock_async_120M PROPERTIES COMPILE_FLAGS "-DF120")
+

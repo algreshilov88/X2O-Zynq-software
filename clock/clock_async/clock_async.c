@@ -47,6 +47,11 @@
 #include "si5332-gty-156p25-gth-250-Registers.h"
 #endif
 
+#ifdef F120M
+// 120M all channels for ALCT GBTX test firmware
+#include "si5332-120-all-Registers.h"
+#endif
+
 // Make the SDK console work in the debugger
 #define printf(...) \
  fprintf(stdout, __VA_ARGS__); \
